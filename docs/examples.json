@@ -1,0 +1,101 @@
+{
+  "notice": "Výlučne ukážkové dáta pre vývoj Angularu. Nie sú načítané z databázy.",
+  "categories": [
+    {
+      "id": 1,
+      "name": "Domácnosť"
+    }
+  ],
+  "provider": {
+    "id": 3,
+    "name": "Ukážkový majster",
+    "description": "Montáž nábytku a drobné opravy.",
+    "location": "Košice",
+    "phone": "+421900000000",
+    "profileImage": null,
+    "availability": true
+  },
+  "services": {
+    "content": [
+      {
+        "id": 4,
+        "provider": {
+          "id": 3,
+          "name": "Ukážkový majster",
+          "description": "Montáž nábytku a drobné opravy.",
+          "location": "Košice",
+          "phone": "+421900000000",
+          "profileImage": null,
+          "availability": true
+        },
+        "category": {
+          "id": 1,
+          "name": "Domácnosť"
+        },
+        "name": "Montáž nábytku",
+        "description": "Montáž skríň a stolov.",
+        "price": 25.5,
+        "priceUnit": "HOUR",
+        "active": true
+      }
+    ],
+    "page": 0,
+    "size": 20,
+    "totalElements": 1,
+    "totalPages": 1
+  },
+  "orderRequest": {
+    "serviceId": 4,
+    "scheduledAt": "2027-01-10T10:00:00",
+    "quantity": 2,
+    "address": "Ukážková 1, Košice",
+    "note": "Montáž skrine"
+  },
+  "order": {
+    "id": 5,
+    "customerId": 1,
+    "providerId": 3,
+    "serviceId": 4,
+    "serviceName": "Montáž nábytku",
+    "scheduledAt": "2027-01-10T10:00:00",
+    "status": "PENDING",
+    "unitPrice": 25.5,
+    "priceUnit": "HOUR",
+    "quantity": 2,
+    "totalPrice": 51,
+    "address": "Ukážková 1, Košice",
+    "note": "Montáž skrine",
+    "createdAt": "2026-09-26T12:00:00"
+  },
+  "orders": {
+    "content": [
+      {
+        "id": 5,
+        "customerId": 1,
+        "providerId": 3,
+        "serviceId": 4,
+        "serviceName": "Montáž nábytku",
+        "scheduledAt": "2027-01-10T10:00:00",
+        "status": "PENDING",
+        "unitPrice": 25.5,
+        "priceUnit": "HOUR",
+        "quantity": 2,
+        "totalPrice": 51,
+        "address": "Ukážková 1, Košice",
+        "note": "Montáž skrine",
+        "createdAt": "2026-09-26T12:00:00"
+      }
+    ],
+    "page": 0,
+    "size": 20,
+    "totalElements": 1,
+    "totalPages": 1
+  },
+  "validationError": {
+    "status": 400,
+    "message": "Invalid request",
+    "fieldErrors": {
+      "name": "must not be blank"
+    }
+  }
+}
