@@ -1459,6 +1459,37 @@
           }
         }
       }
+    },
+    "/api/info": {
+      "get": {
+        "summary": "Public website mode",
+        "operationId": "get_api_info",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Website name and demo mode",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "demo"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "demo": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

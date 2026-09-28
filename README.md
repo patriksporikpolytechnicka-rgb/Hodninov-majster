@@ -1,82 +1,98 @@
-# Hodinový majster – Spring Boot backend
+# Hodinový majster
 
-Frontend pripravuje spolupracovník v Angulari. Backend: Java 17+, Spring Boot 3.5.5, PostgreSQL.
+Webová stránka v **Angulari** napojená na **Spring Boot REST API**.
+Plánovaná databáza je PostgreSQL na školskom serveri. Na školskú ukážku je pripravený samostatný profil s H2 v pamäti.
 
-## Podklady pre frontend
+## Otvorenie webu pri kontrole projektu
 
-- [API návod](docs/API.md)
-- [OpenAPI 3.0.3](docs/openapi.json)
+V PowerShelli v koreňovom priečinku:
+
+```powershell
+.\start-demo.ps1
+```
+
+Po spustení servera otvorte **http://localhost:8080**.
+Skript zostaví Angular a Spring Boot; pri prvom spustení stiahne závislosti.
+Na tomto počítači už bol projekt zostavený, takže ho môžete spustiť rýchlejšie:
+
+```powershell
+.\start-demo.ps1 -SkipBuild
+```
+
+Parameter -SkipBuild používajte len po úspešnom zostavení a bez nových zmien kódu.
+Web funguje v prehliadači; terminál drží spustený server. Zastavenie: Ctrl+C.
+
+- Zákazník: **zakaznik@demo.sk**
+- Poskytovateľ montáže: **majster@demo.sk**
+- Heslo oboch ukážkových účtov: **DemoHeslo123!**
+
+[Podrobný návod a scenár prezentácie](docs/DEMO.md)
+
+## Čo funguje
+
+- Responzívna úvodná stránka a katalóg služieb z API.
+- Hľadanie podľa názvu, mesta a kategórie, stránkovanie.
+- Detail služby a poskytovateľa.
+- Registrácia a prihlásenie cez JWT.
+- Vytvorenie objednávky so serverovým výpočtom ceny.
+- Zoznam objednávok a oprávnené zmeny stavu zákazníkom/poskytovateľom.
+- Ukážkový režim je viditeľne označený. Dáta sa po reštarte vymažú.
+
+Účet zostáva prihlásený iba počas aktuálneho otvorenia stránky; refresh vyžaduje nové prihlásenie.
+Webový editor poskytovateľského profilu a ponúk, chat, hodnotenia a platby sú ďalšie kroky.
+
+## Vývoj
+
+Potrebné: JDK 17+, Node.js kompatibilný s Angular 21 (napr. 22.12+ alebo 24), npm a Maven.
+[Oficiálna kompatibilita Angularu](https://angular.dev/reference/versions).
+Skript vie nájsť Maven aj v IntelliJ pod Program Files.
+
+Backend:
+
+```powershell
+mvn -Pdemo spring-boot:run '-Dspring-boot.run.profiles=demo'
+```
+
+Frontend v ďalšom termináli:
+
+```powershell
+cd frontend
+npm ci
+npm start
+```
+
+Frontend: http://localhost:4200. Proxy presmeruje /api na backend 127.0.0.1:8080.
+
+## Overenie
+
+Overené 28. 9. 2026: Angular production build, 26 unit/MVC testov a samostatný
+integračný DemoFlowTest (prihlásenie → katalóg → objednávka → dokončenie) prešli.
+PostgreSQL test zostáva odložený.
+
+```powershell
+npm --prefix frontend run build
+mvn -Pdemo test
+```
+
+## Školská databáza – neskôr
+
+Pre PostgreSQL nepoužite profil demo. Nastavte DB_URL, DB_USERNAME, DB_PASSWORD a náhodný
+JWT_SECRET s aspoň 32 bajtmi. FRONTEND_ORIGIN je predvolene http://localhost:4200.
+Heslá a kľúče neukladajte do repozitára.
+
+Predvolený profil očakáva existujúcu schému (validate). Profil local používa Hibernate update
+a smie sa použiť iba nad vlastnou vývojovou databázou po dohode so správcom.
+VPN, SSL, migrácie, prvý ADMIN účet a kategórie zostávajú na dohodu so správcom.
+
+Odložený PostgreSQL test sa aktivuje cez RUN_POSTGRES_TESTS=true.
+H2 demo test nenahrádza overenie na PostgreSQL.
+
+## Podklady
+
+- [API pre frontend](docs/API.md)
+- [OpenAPI](docs/openapi.json)
 - [TypeScript typy](docs/api-types.ts)
-- [Ukážkové dáta](docs/examples.json)
-- [TODO a odložená databáza](TODO.md)
+- [TODO](TODO.md)
 
-## Stav overenia
-
-Entity a REST API sú implementované. Zostavenie a testy zatiaľ nie sú potvrdené:
-sandbox blokuje terminálový prístup k OneDrive a žiadosť o testy mimo sandboxu bola zamietnutá.
-PostgreSQL na školskom serveri je podľa dohody odložené; lokálna databáza sa nevytvára.
-
-## Testy bez databázy
-
-Z koreňa projektu s Mavenom a JDK:
-
-```powershell
-mvn test
-```
-
-Unit a MVC testy pokrývajú ceny, vlastníctvo, stavy, registráciu, JWT, validáciu a CORS.
-UserRepositoryPostgresTest je predvolene preskočený; aktivuje ho RUN_POSTGRES_TESTS=true.
-V IntelliJ možno použiť vstavaný Maven cez Maven → Lifecycle → test.
-
-## Spustenie po príprave školskej databázy
-
-V termináli v koreňovom priečinku nastavte pripojenie (SERVER/DATABAZA/POUZIVATEL nahradiť):
-
-```powershell
-$env:DB_URL = 'jdbc:postgresql://SERVER:5432/DATABAZA'
-$env:DB_USERNAME = 'POUZIVATEL'
-$dbCredential = Get-Credential -UserName $env:DB_USERNAME -Message 'Heslo pre PostgreSQL'
-$env:DB_PASSWORD = $dbCredential.GetNetworkCredential().Password
-# Náhodný podpisovací kľúč; jeho zmena zneplatní vydané tokeny.
-$jwtBytes = New-Object byte[] 48
-$jwtRng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
-$jwtRng.GetBytes($jwtBytes)
-$jwtRng.Dispose()
-$env:JWT_SECRET = [Convert]::ToBase64String($jwtBytes)
-$env:FRONTEND_ORIGIN = 'http://localhost:4200'
-mvn spring-boot:run
-```
-
-JWT_SECRET musí mať aspoň 32 bajtov; pri nasadení ho uchovajte v konfigurácii servera.
-Tajomstvá neukladajte do repozitára. Po práci ich odstráňte z terminálu:
-
-```powershell
-Remove-Item Env:DB_PASSWORD, Env:JWT_SECRET
-```
-
-Predvolený profil iba overuje schému (validate). Profil local používa Hibernate update
-na vytvorenie/aktualizáciu tabuliek users, provider_profiles, categories, services a orders.
-Použite ho iba nad vlastnou vývojovou databázou po dohode so správcom:
-
-```powershell
-mvn spring-boot:run '-Dspring-boot.run.profiles=local'
-```
-
-VPN, SSL a migrácie sú na dohodu so správcom. Backend používa port 8080.
-Úspešný štart obsahuje v logu Started FxApplication.
-
-## Odložený PostgreSQL test
-
-S DB_URL/DB_USERNAME/DB_PASSWORD pre samostatnú vývojovú/testovaciu databázu:
-
-```powershell
-$env:RUN_POSTGRES_TESTS = 'true'
-mvn '-Dtest=UserRepositoryPostgresTest' test
-Remove-Item Env:RUN_POSTGRES_TESTS
-```
-
-Test uloží používateľa s náhodným e-mailom a hashom hesla, vyprázdni JPA cache a načíta ho podľa ID.
-Transakcia sa vráti späť. Schéma a posun sekvencie môžu zostať; nepoužívať produkčnú databázu.
-
-Prvý ADMIN účet a základné kategórie pripravíme so správcom databázy.
-Obnovenie hesla, refresh tokeny, obmedzenie prihlasovacích pokusov, chat, hodnotenia, platby a nasadenie sú v TODO.
+Verejná registrácia povoľuje iba CUSTOMER/PROVIDER. Produkčné nasadenie potrebuje HTTPS,
+správu tajomstiev, obmedzenie prihlasovacích pokusov a dokončenie úloh v TODO.

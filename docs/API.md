@@ -2,9 +2,9 @@
 
 ## Stav a podklady
 
-Backend obsahuje implementáciu 17 REST operácií. Zostavenie a testy zatiaľ nie sú potvrdené:
-Maven terminál nemá v sandboxe prístup k OneDrive a spustenie mimo sandboxu bolo zamietnuté.
-PostgreSQL na školskom serveri zostáva odložené. Kolega môže pripravovať Angular s mock dátami.
+Backend má 18 REST operácií vrátane GET /api/info. Základný Angular frontend je v priečinku frontend/.
+Angular build, unit/MVC testy a demo integračný test prešli 28. 9. 2026.
+Školská PostgreSQL databáza je stále odložená; pre kontrolu projektu použite docs/DEMO.md.
 
 - [openapi.json](openapi.json) – OpenAPI 3.0.3 na import do Postmanu/Swagger Editora.
 - [api-types.ts](api-types.ts) – TypeScript typy pre Angular.
@@ -159,4 +159,4 @@ Sieťové chyby a 5xx nemusia mať tento formát; zobrazte všeobecné hlásenie
 4. Akcie objednávky zobraziť podľa role a tabuľky stavov.
 5. Pri integrácii vymeniť mock službu za HttpClient a pridávať Bearer hlavičku len na adresu tohto backendu.
 
-Samotný Angular projekt nie je súčasťou tejto zmeny. Chat, hodnotenia, platby a kompletná administrácia sú ďalšie etapy.
+Základný Angular frontend je pripravený v priečinku frontend/. Chat, hodnotenia, platby a kompletná administrácia sú ďalšie etapy.

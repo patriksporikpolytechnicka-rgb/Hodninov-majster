@@ -32,10 +32,19 @@ public class SecurityConfig {
     public static final String ISSUER = "hodinovy-majster";
     @Bean Clock appClock() { return Clock.system(ZoneId.of("Europe/Bratislava")); }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-    @Bean SecretKey jwtKey(@Value("${app.jwt.secret}") String secret) {
+    @Bean
+    @org.springframework.context.annotation.Profile("!demo")
+    SecretKey jwtKey(@Value("${app.jwt.secret}") String secret) {
         byte[] bytes = secret.getBytes(StandardCharsets.UTF_8);
         if (bytes.length < 32) throw new IllegalStateException("JWT_SECRET must contain at least 32 bytes");
         return new SecretKeySpec(bytes, "HmacSHA256");
+    }
+    @Bean
+    @org.springframework.context.annotation.Profile("demo")
+    SecretKey demoJwtKey() throws java.security.NoSuchAlgorithmException {
+        javax.crypto.KeyGenerator generator = javax.crypto.KeyGenerator.getInstance("HmacSHA256");
+        generator.init(256);
+        return generator.generateKey();
     }
     @Bean JwtEncoder jwtEncoder(SecretKey key) { return new NimbusJwtEncoder(new ImmutableSecret<>(key)); }
     @Bean JwtDecoder jwtDecoder(SecretKey key) {
@@ -73,6 +82,8 @@ public class SecurityConfig {
         return http.cors(cors -> {}).csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/*.js", "/*.css", "/favicon.svg", "/assets/**",
+                                "/sluzby/*", "/objednavky", "/prihlasenie", "/registracia", "/api/info").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me", "/api/providers/me", "/api/services/mine").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/providers/*", "/api/services", "/api/services/*").permitAll()
