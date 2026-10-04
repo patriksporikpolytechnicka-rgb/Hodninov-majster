@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AppInfoController {
     private final boolean demo;
-    public AppInfoController(@Value("${app.demo:false}") boolean demo) { this.demo = demo; }
+    private final boolean demoAccounts;
+    public AppInfoController(@Value("${app.demo:false}") boolean demo,
+                                            @Value("${app.demo-accounts:false}") boolean demoAccounts) {
+        this.demo = demo;
+        this.demoAccounts = demoAccounts;
+    }
     @GetMapping("/api/info")
-    public AppInfo info() { return new AppInfo("Hodinový majster", demo); }
-    public record AppInfo(String name, boolean demo) {}
+    public AppInfo info() { return new AppInfo("Hodinový majster", demo, demoAccounts); }
+    public record AppInfo(String name, boolean demo, boolean demoAccounts) {}
 }

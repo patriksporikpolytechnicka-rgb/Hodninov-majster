@@ -11,8 +11,8 @@ import { IconComponent } from '../shared/icon.component';
       <div class="auth-intro"><p class="eyebrow">VITAJTE U MAJSTRA</p><h1>{{ register ? 'Každá dobrá spolupráca' : 'Vaše plány.' }}<br><em>{{ register ? 'začína tu.' : 'Na jednom mieste.' }}</em></h1>
         <p>{{ register ? 'Vytvorte si účet a nájdite pomoc alebo ponúknite svoje šikovné ruky.' : 'Prihláste sa a majte svoje objednávky pod kontrolou.' }}</p>
         <a routerLink="/" class="text-link">← Späť na ponuku služieb</a>
-        @if (api.info()?.demo && !register) {
-          <div class="demo-accounts"><strong>Vyskúšajte školskú ukážku</strong><p>Údaje sú fiktívne a po reštarte sa vymažú.</p><div><button class="button button-outline button-small" type="button" (click)="demo('zakaznik@demo.sk')">Som zákazník</button><button class="button button-outline button-small" type="button" (click)="demo('majster@demo.sk')">Som poskytovateľ</button></div><small>Tlačidlo vyplní ukážkové prihlasovacie údaje.</small></div>
+        @if (api.info()?.demoAccounts && !register) {
+          <div class="demo-accounts"><strong>Vyskúšajte školskú ukážku</strong><p>{{ api.info()?.demo ? 'Údaje sú fiktívne a po reštarte sa vymažú.' : 'Ukážkové účty sú uložené v databáze.' }}</p><div><button class="button button-outline button-small" type="button" (click)="demo('zakaznik@demo.sk')">Som zákazník</button><button class="button button-outline button-small" type="button" (click)="demo('majster@demo.sk')">Som poskytovateľ</button></div><small>Tlačidlo vyplní ukážkové prihlasovacie údaje.</small></div>
         }
       </div>
       <form class="panel auth-form" #form="ngForm" (ngSubmit)="submit()">

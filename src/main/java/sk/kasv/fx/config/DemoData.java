@@ -10,7 +10,7 @@ import sk.kasv.fx.repository.*;
 import java.math.BigDecimal;
 
 @Component
-@Profile("demo")
+@Profile({"demo", "seed"})
 public class DemoData implements CommandLineRunner {
     private final UserRepository users;
     private final ProviderProfileRepository providers;

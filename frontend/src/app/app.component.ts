@@ -7,6 +7,8 @@ import { ApiService, SessionService } from './core/api.service';
     <a class="skip-link" href="#main">Preskočiť na obsah</a>
     @if (api.info()?.demo) {
       <div class="demo-strip"><span class="live-dot"></span> Školská ukážka <span class="demo-description">· Fiktívne služby a účty. Dáta sa po reštarte vymažú.</span></div>
+    } @else if (api.info()?.demoAccounts) {
+      <div class="demo-strip"><span class="live-dot"></span> Školská ukážka <span class="demo-description">· Ukážkové účty a služby. Dáta sa ukladajú do databázy.</span></div>
     }
     <header class="site-header"><div class="container header-inner">
       <a class="brand" routerLink="/" aria-label="Hodinový majster – domov"><span class="brand-mark">h<span>m</span></span><span>hodinový<strong>majster.</strong></span></a>

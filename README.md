@@ -74,6 +74,19 @@ npm --prefix frontend run build
 mvn -Pdemo test
 ```
 
+## Lokálna PostgreSQL databáza
+
+Pre vývoj s lokálnym PostgreSQL (na tomto počítači port 6966):
+
+```powershell
+.\setup-local-db.ps1        # vytvorí používateľa fx_app a databázu fx, uloží pripojenie do .env.local
+.\start-local.ps1 -Test     # spustí UserRepositoryPostgresTest proti databáze
+.\start-local.ps1           # spustí backend s profilom local (tabuľky vytvorí Hibernate)
+```
+
+Setup si vypýta heslo superusera postgres. Súbor .env.local je v .gitignore a necommituje sa.
+Iný port: `.\setup-local-db.ps1 -Port 5432`.
+
 ## Školská databáza – neskôr
 
 Pre PostgreSQL nepoužite profil demo. Nastavte DB_URL, DB_USERNAME, DB_PASSWORD a náhodný

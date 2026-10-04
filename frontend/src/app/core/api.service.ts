@@ -27,12 +27,15 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   return next(token ? request.clone({ setHeaders: { Authorization: 'Bearer ' + token } }) : request);
 };
 
+export interface AppInfo { name: string; demo: boolean; demoAccounts: boolean; }
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
   private session = inject(SessionService);
-  readonly info = signal<{ name: string; demo: boolean } | null>(null);
-  loadInfo() { this.http.get<{ name: string; demo: boolean }>('/api/info').subscribe({ next: value => this.info.set(value), error: () => this.info.set(null) }); }
+  readonly info = signal<AppInfo | null>(null);
+  loadInfo() { this.http.get<AppInfo>('/api/info').subscribe({ next: value => 
+this.info.set(value), error: () => this.info.set(null) }); }
   categories() { return this.http.get<CategoryResponse[]>('/api/categories'); }
   services(filters: { q?: string; location?: string; categoryId?: number; page?: number }) {
     let params = new HttpParams().set('size', 6).set('page', filters.page ?? 0);
