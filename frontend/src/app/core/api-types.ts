@@ -31,3 +31,8 @@ export interface OrderResponse {
 }
 export interface PageResponse<T> { content: T[]; page: number; size: number; totalElements: number; totalPages: number; }
 export interface ApiError { status: number; message: string; fieldErrors: Record<string, string>; }
+export interface SubscriptionResponse {
+  status: 'TRIAL' | 'ACTIVE' | 'EXPIRED'; subscriptionStart: string | null;
+  subscriptionEnd: string | null; monthlyFee: number; currency: 'EUR';
+  canReceiveOrders: boolean; demoPayment: boolean;
+}

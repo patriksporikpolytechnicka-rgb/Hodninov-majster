@@ -38,7 +38,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 
 - [ ] Chat zákazníka s poskytovateľom.
 - [ ] Hodnotenia po dokončenej zákazke.
-- [ ] Evidencia/simulácia platieb a provízií.
+- [ ] Produkčné mesačné predplatné poskytovateľov (10 €), platobná brána a overené potvrdenia platieb. Bez provízií zo zákaziek.
 - [ ] Administrácia používateľov, kategórií a objednávok.
 - [ ] Testovanie, dokumentácia a nasadenie.
 

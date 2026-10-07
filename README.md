@@ -39,7 +39,7 @@ Web funguje v prehliadači; terminál drží spustený server. Zastavenie: Ctrl+
 - Ukážkový režim je viditeľne označený. Dáta sa po reštarte vymažú.
 
 Účet zostáva prihlásený iba počas aktuálneho otvorenia stránky; refresh vyžaduje nové prihlásenie.
-Webový editor poskytovateľského profilu a ponúk, chat, hodnotenia a platby sú ďalšie kroky.
+Webový editor profilu a stav predplatného sú dostupné. Editor ponúk, chat, hodnotenia a produkčné platby sú ďalšie kroky.
 
 ## Vývoj
 
@@ -96,3 +96,14 @@ H2 demo test nenahrádza overenie na PostgreSQL.
 
 Verejná registrácia povoľuje iba CUSTOMER/PROVIDER. Produkčné nasadenie potrebuje HTTPS,
 správu tajomstiev, obmedzenie prihlasovacích pokusov a dokončenie úloh v TODO.
+
+## Predplatné poskytovateľa
+Zákazník používa platformu zdarma. Poskytovateľ má od prvého vytvorenia profilu
+30 dní zdarma, potom platí 10 € mesačne. Z ceny zákazky sa neodpočítava provízia.
+Úprava profilu skúšobné obdobie neobnoví. Po vypršaní nemožno vytvoriť ani prijať
+novú objednávku; už prijaté zákazky možno dokončiť.
+Stránka /profil umožňuje vytvoriť profil a zobraziť stav TRIAL, ACTIVE alebo EXPIRED.
+V demo režime možno po vypršaní simulovať platbu za jeden kalendárny mesiac.
+Produkčná platobná brána a automatické účtovanie zatiaľ nie sú zapojené.
+Pred spustením nad existujúcou PostgreSQL databázou musí správca vykonať
+docs/provider-subscription.sql; migrácia sa automaticky nespúšťa.

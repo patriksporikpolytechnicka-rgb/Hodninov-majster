@@ -13,6 +13,7 @@ import { ApiService, SessionService } from './core/api.service';
       <nav aria-label="Hlavná navigácia">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Nájsť službu</a>
         <a routerLink="/objednavky" routerLinkActive="active">Objednávky</a>
+        @if (session.auth()?.user?.role === 'PROVIDER') { <a routerLink="/profil" routerLinkActive="active">Profil a predplatné</a> }
       </nav>
       <div class="header-actions">
         @if (session.auth(); as auth) {

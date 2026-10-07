@@ -1,4 +1,4 @@
-// Contract for Angular. No frontend implementation is included.
+// Types shared with the backend API contract in docs/api-types.ts.
 export type Role = 'CUSTOMER' | 'PROVIDER' | 'ADMIN';
 export type PriceUnit = 'HOUR' | 'JOB' | 'SQUARE_METER';
 export type OrderStatus = 'PENDING' | 'ACCEPTED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'REJECTED';
@@ -31,3 +31,8 @@ export interface OrderResponse {
 }
 export interface PageResponse<T> { content: T[]; page: number; size: number; totalElements: number; totalPages: number; }
 export interface ApiError { status: number; message: string; fieldErrors: Record<string, string>; }
+export interface SubscriptionResponse {
+  status: 'TRIAL' | 'ACTIVE' | 'EXPIRED'; subscriptionStart: string | null;
+  subscriptionEnd: string | null; monthlyFee: number; currency: 'EUR';
+  canReceiveOrders: boolean; demoPayment: boolean;
+}

@@ -20,6 +20,8 @@ public class CatalogService {
     private final ServiceRepository services;
     private final ProviderProfileRepository providers;
     private final CurrentUser current;
+    @org.springframework.beans.factory.annotation.Autowired
+    private java.time.Clock clock = java.time.Clock.systemUTC();
     public CatalogService(CategoryRepository categories, ServiceRepository services,
                           ProviderProfileRepository providers, CurrentUser current) {
         this.categories = categories; this.services = services; this.providers = providers; this.current = current;
@@ -44,7 +46,7 @@ public class CatalogService {
         profile.setUser(user); profile.setName(request.name().strip());
         profile.setDescription(request.description().strip()); profile.setLocation(request.location().strip());
         profile.setPhone(request.phone().strip()); profile.setProfileImage(request.profileImage());
-        profile.setAvailability(request.availability());
+        profile.setAvailability(request.availability()); profile.startTrial(clock.instant());
         return ApiMapper.provider(providers.saveAndFlush(profile));
     }
     public PageResponse<ServiceResponse> services(Long categoryId, Long providerId, String q, String location, int page, int size) {

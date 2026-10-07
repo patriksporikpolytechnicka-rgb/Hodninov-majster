@@ -24,7 +24,7 @@ class OrderServiceTest {
     ProviderProfile provider = new ProviderProfile();
     Service service = new Service();
     Order order = new Order();
-    @BeforeEach void setup() {
+    @BeforeEach void setup() { provider.startTrial(clock.instant());
         customer.setId(1L); providerUser.setId(2L); provider.setId(3L); provider.setUser(providerUser); provider.setAvailability(true);
         service.setId(4L); service.setProvider(provider); service.setActive(true); service.setName("Assembly");
         service.setPrice(new BigDecimal("25.50")); service.setPriceUnit(PriceUnit.HOUR);
@@ -45,6 +45,17 @@ class OrderServiceTest {
         assertThat(response.customerId()).isEqualTo(1L);
         service.setPrice(new BigDecimal("99.00"));
         assertThat(response.unitPrice()).isEqualByComparingTo("25.50");
+    }
+    @Test void expiredSubscriptionBlocksNewOrdersAndAcceptanceButAllowsCompletion() {
+        Clock expiredClock = Clock.offset(clock, Duration.ofDays(30));
+        OrderService expired = new OrderService(orders, services, current, expiredClock);
+        var future = new OrderRequest(4L, LocalDateTime.now(expiredClock).plusDays(1), BigDecimal.ONE, "Address", null);
+        assertThatThrownBy(() -> expired.create(future)).isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
+        when(current.require()).thenReturn(providerUser);
+        assertThatThrownBy(() -> expired.changeStatus(5L, new StatusRequest(OrderStatus.ACCEPTED)))
+                .isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
+        order.setStatus(OrderStatus.IN_PROGRESS);
+        assertThat(expired.changeStatus(5L, new StatusRequest(OrderStatus.COMPLETED)).status()).isEqualTo(OrderStatus.COMPLETED);
     }
     @Test void refusesUnavailableProvider() {
         provider.setAvailability(false);
