@@ -15,10 +15,11 @@
 }
 
 /* Pale category colours: --cat-bg for tiles, --cat-ink for text and icons */
-.cat-domacnost { --cat-bg: #EFD9C7; --cat-ink: #7A3E1D; }
-.cat-zahrada { --cat-bg: #DCE5CC; --cat-ink: #3E5223; }
-.cat-it-pomoc { --cat-bg: #D6E0E8; --cat-ink: #2C4559; }
-.cat-stahovanie { --cat-bg: #E2DAE6; --cat-ink: #4E3D5C; }
+.cat-domacnost { --cat-bg: #F2D2B8; --cat-ink: #7A3E1D; }
+.cat-zahrada { --cat-bg: #D4E3BF; --cat-ink: #3E5223; }
+.cat-it-pomoc { --cat-bg: #CCDCEA; --cat-ink: #2C4559; }
+.cat-stahovanie { --cat-bg: #E1D3E8; --cat-ink: #4E3D5C; }
+.cat-vsetko { --cat-bg: #F1DE9F; --cat-ink: #1E2A44; }
 
 *,
 *::before,

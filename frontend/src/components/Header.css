@@ -13,14 +13,6 @@
 
 .header-logo {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 800;
-  font-size: 20px;
-}
-
-.header-logo img {
-  border-radius: 8px;
 }
 
 .header-nav {
@@ -141,10 +133,6 @@
   .header {
     padding-top: 14px;
     padding-bottom: 14px;
-  }
-
-  .header-logo {
-    font-size: 18px;
   }
 
   .header-nav,

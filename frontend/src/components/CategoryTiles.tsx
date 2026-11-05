@@ -12,7 +12,7 @@ interface Props {
 export default function CategoryTiles({ categories, counts, total, selected, onSelect }: Props) {
   return (
     <nav className="tiles" aria-label="Kategórie">
-      <button className={`tile tile-all ${selected === null ? 'is-on' : ''}`} aria-pressed={selected === null} onClick={() => onSelect(null)}>
+      <button className={`tile tile-all cat-vsetko ${selected === null ? 'is-on' : ''}`} aria-pressed={selected === null} onClick={() => onSelect(null)}>
         <span className="tile-icon" dangerouslySetInnerHTML={{ __html: categoryIcon() }} />
         <span><b>Všetko</b><small>{offers(total)}</small></span>
       </button>

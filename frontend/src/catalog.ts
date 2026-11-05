@@ -34,6 +34,11 @@ export function unitLabel(unit: PriceUnit) {
   return units[unit]
 }
 
+// "Peter Novák" -> "PN"
+export function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('')
+}
+
 // Slovak plural: 1 ponuka, 2–4 ponuky, 0 / 5+ ponúk
 export function offers(n: number) {
   return `${n} ${n === 1 ? 'ponuka' : n >= 2 && n <= 4 ? 'ponuky' : 'ponúk'}`

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CaretRight, ClipboardText, Heart, Info, List, MagnifyingGlass, Plus, Wrench, X } from '@phosphor-icons/react'
-import logo from '../assets/logo.svg'
+import Logo from './Logo'
 import './Header.css'
 
 const menuLinks = [
@@ -24,9 +24,8 @@ export default function Header() {
 
   return (
     <header className="header">
-      <a className="header-logo" href="/">
-        <img src={logo} alt="" width={32} height={32} />
-        Hodinový majster
+      <a className="header-logo" href="/" aria-label="Hodinový majster, domov">
+        <Logo size={38} />
       </a>
 
       <nav className="header-nav" aria-label="Hlavné menu">
@@ -55,10 +54,7 @@ export default function Header() {
       {menuOpen && (
         <div className="mobile-menu" id="mobile-menu">
           <div className="mobile-menu-top">
-            <span className="header-logo">
-              <img src={logo} alt="" width={28} height={28} />
-              Hodinový majster
-            </span>
+            <Logo light size={34} />
             <button className="menu-button" aria-label="Zavrieť menu" onClick={() => setMenuOpen(false)}>
               <X size={24} weight="light" />
             </button>

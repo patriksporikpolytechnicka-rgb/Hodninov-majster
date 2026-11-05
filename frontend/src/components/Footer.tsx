@@ -1,19 +1,25 @@
-import { Wrench } from '@phosphor-icons/react'
+import Logo from './Logo'
 
 export default function Footer() {
   return (
     <>
-      <section className="band">
-        <Wrench size={40} weight="light" className="band-icon" />
+      <section className="band" id="pre-majstrov">
         <div>
-          <b>Ponúkate služby?</b>
-          <p>Prvých 30 dní zadarmo, potom 10 € mesačne. Z vašich zákaziek si neberieme nič.</p>
+          <h2>Ponúkate služby?</h2>
+          <p>Prvých 30 dní zadarmo, potom 10 € mesačne. Z vašich zákaziek si neberieme ani cent.</p>
         </div>
-        <a className="button-yellow band-cta" href="#">Začať ponúkať</a>
+        <a className="button-yellow band-cta" href="#">Pridať moju službu</a>
       </section>
+
       <footer className="footer">
-        <span>Hodinový majster</span>
-        <span>Školský projekt · 2026</span>
+        <a href="/" aria-label="Hodinový majster, domov"><Logo light size={30} /></a>
+        <nav className="footer-links" aria-label="Pätička">
+          <a href="#sluzby">Nájsť službu</a>
+          <a href="#ako-to-funguje">Ako to funguje</a>
+          <a href="#pre-majstrov">Pre majstrov</a>
+          <a href="#">Moje objednávky</a>
+        </nav>
+        <p className="footer-note">Nicolas Kiš a Patrik Šporík · Školský projekt · Košická akadémia · 2026</p>
       </footer>
     </>
   )
