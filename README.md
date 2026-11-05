@@ -1,6 +1,6 @@
 # Hodinový majster
 
-Webová stránka v **Angulari** napojená na **Spring Boot REST API**.
+Webová stránka v **Reacte** (TypeScript, Vite) napojená na **Spring Boot REST API**. Návod pre frontend: [docs/FRONTEND.md](docs/FRONTEND.md).
 Plánovaná databáza je PostgreSQL na školskom serveri. Na školskú ukážku je pripravený samostatný profil s H2 v pamäti.
 
 ## Otvorenie webu pri kontrole projektu
@@ -12,7 +12,7 @@ V PowerShelli v koreňovom priečinku:
 ```
 
 Po spustení servera otvorte **http://localhost:8080**.
-Skript zostaví Angular a Spring Boot; pri prvom spustení stiahne závislosti.
+Skript zostaví frontend a Spring Boot; pri prvom spustení stiahne závislosti.
 Na tomto počítači už bol projekt zostavený, takže ho môžete spustiť rýchlejšie:
 
 ```powershell
@@ -30,21 +30,15 @@ Web funguje v prehliadači; terminál drží spustený server. Zastavenie: Ctrl+
 
 ## Čo funguje
 
-- Responzívna úvodná stránka a katalóg služieb z API.
-- Hľadanie podľa názvu, mesta a kategórie, stránkovanie.
-- Detail služby a poskytovateľa.
-- Registrácia a prihlásenie cez JWT.
-- Vytvorenie objednávky so serverovým výpočtom ceny.
-- Zoznam objednávok a oprávnené zmeny stavu zákazníkom/poskytovateľom.
-- Ukážkový režim je viditeľne označený. Dáta sa po reštarte vymažú.
+Backend (REST API): registrácia a prihlásenie cez JWT, katalóg s filtrami a stránkovaním,
+objednávky so serverovým výpočtom ceny a zmenami stavu, profil poskytovateľa a predplatné.
 
-Účet zostáva prihlásený iba počas aktuálneho otvorenia stránky; refresh vyžaduje nové prihlásenie.
-Webový editor profilu a stav predplatného sú dostupné. Editor ponúk, chat, hodnotenia a produkčné platby sú ďalšie kroky.
+Frontend sa prepisuje z Angularu do Reactu. Zatiaľ je pripravený prázdny projekt napojený na API;
+stránky sú popísané v [docs/FRONTEND.md](docs/FRONTEND.md).
 
 ## Vývoj
 
-Potrebné: JDK 17+, Node.js kompatibilný s Angular 21 (napr. 22.12+ alebo 24), npm a Maven.
-[Oficiálna kompatibilita Angularu](https://angular.dev/reference/versions).
+Potrebné: JDK 17+, Node.js 20.19+ alebo 22.12+, npm a Maven.
 Skript vie nájsť Maven aj v IntelliJ pod Program Files.
 
 Backend:
@@ -57,15 +51,15 @@ Frontend v ďalšom termináli:
 
 ```powershell
 cd frontend
-npm ci
-npm start
+npm install
+npm run dev
 ```
 
 Frontend: http://localhost:4200. Proxy presmeruje /api na backend 127.0.0.1:8080.
 
 ## Overenie
 
-Overené 28. 9. 2026: Angular production build, 26 unit/MVC testov a samostatný
+Overené 28. 9. 2026 (ešte s Angularom): production build, 26 unit/MVC testov a samostatný
 integračný DemoFlowTest (prihlásenie → katalóg → objednávka → dokončenie) prešli.
 PostgreSQL test zostáva odložený.
 

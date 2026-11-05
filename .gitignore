@@ -38,11 +38,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
-# Angular and local presentation artifacts
+# Frontend and local presentation artifacts
 frontend/node_modules/
-frontend/.angular/
 frontend/dist/
-frontend/out-tsc/
 .demo-logs/
 .env
 .env.*

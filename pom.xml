@@ -95,7 +95,7 @@
         <resources>
             <resource><directory>src/main/resources</directory></resource>
             <resource>
-                <directory>frontend/dist/hodinovy-majster/browser</directory>
+                <directory>frontend/dist</directory>
                 <targetPath>static</targetPath>
             </resource>
         </resources>

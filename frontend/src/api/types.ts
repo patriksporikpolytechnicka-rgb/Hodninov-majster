@@ -36,3 +36,4 @@ export interface SubscriptionResponse {
   subscriptionEnd: string | null; monthlyFee: number; currency: 'EUR';
   canReceiveOrders: boolean; demoPayment: boolean;
 }
+export interface AppInfo { name: string; demo: boolean; demoAccounts: boolean; }

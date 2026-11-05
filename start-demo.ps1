@@ -19,21 +19,21 @@ if (-not $SkipBuild) {
             Select-Object -First 1 -ExpandProperty FullName
     }
     if (-not $maven) { throw 'Maven sa nenasiel. Nainstalujte Maven alebo pouzite Maven v IntelliJ.' }
-    Write-Host '1/3 Instalujem a zostavujem Angular...' -ForegroundColor Cyan
+    Write-Host '1/3 Instalujem a zostavujem frontend...' -ForegroundColor Cyan
     Push-Location (Join-Path $PSScriptRoot 'frontend')
     try {
         $lockHash = (Get-FileHash -LiteralPath 'package-lock.json' -Algorithm SHA256).Hash
         $stamp = 'node_modules\.hodinovy-majster-lock'
         $installedHash = if (Test-Path -LiteralPath $stamp) { (Get-Content -LiteralPath $stamp -Raw).Trim() } else { '' }
-        if ($installedHash -ne $lockHash -or -not (Test-Path -LiteralPath 'node_modules\@angular\cli\bin\ng.js')) {
+        if ($installedHash -ne $lockHash -or -not (Test-Path -LiteralPath 'node_modules\vite\package.json')) {
             & $npm ci --no-fund --no-audit
-            if ($LASTEXITCODE -ne 0) { throw 'Instalacia Angular zavislosti zlyhala.' }
+            if ($LASTEXITCODE -ne 0) { throw 'Instalacia frontend zavislosti zlyhala.' }
             Set-Content -LiteralPath $stamp -Value $lockHash
         }
         & $npm run build
-        if ($LASTEXITCODE -ne 0) { throw 'Angular build zlyhal.' }
+        if ($LASTEXITCODE -ne 0) { throw 'Frontend build zlyhal.' }
     } finally { Pop-Location }
-    Write-Host '2/3 Balim Spring Boot s Angularom a demo profilom...' -ForegroundColor Cyan
+    Write-Host '2/3 Balim Spring Boot s frontendom a demo profilom...' -ForegroundColor Cyan
     & $maven -B -Pdemo -DskipTests package
     if ($LASTEXITCODE -ne 0) { throw 'Maven build zlyhal.' }
 }

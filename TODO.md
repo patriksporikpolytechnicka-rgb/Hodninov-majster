@@ -1,6 +1,6 @@
 # TODO – Hodinový majster
 
-Technológie: Angular + TypeScript, Java + Spring Boot, PostgreSQL.
+Technológie: React + TypeScript, Java + Spring Boot, PostgreSQL.
 
 ## Lokálna PostgreSQL a demo v2 – 4. 10. 2026
 
@@ -64,7 +64,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [x] OpenAPI kontrakt, TypeScript typy, ukážkové JSON dáta a návod v docs/.
 - [x] Unit/MVC testy oprávnení, ceny, stavov, JWT a vstupov (úspešne spustené 28. 9. 2026).
 - [x] Prešlo 26 unit/MVC testov a integračný demo test.
-- [ ] So správcom databázy pripraviť prvý ADMIN účet a základné kategórie. (kategórie hotové 5. 11. 2026, ADMIN ešte nie)
+- [x] So správcom databázy pripraviť prvý ADMIN účet a základné kategórie. (5. 11. 2026: admin@hodinovymajster.sk, kategórie cez db/school-categories.sql)
 - [ ] Overiť JPA mapovania, filtre, unikátnosť a súbežné zmeny na PostgreSQL. (mapovania lokálne overené 4. 10. 2026; filtre, unikátnosť a súbežnosť zatiaľ nie)
 - [ ] Doplniť databázové migrácie pred produkčným nasadením.
 - [ ] Pred verejným nasadením doplniť obmedzenie pokusov o prihlásenie a HTTPS.
