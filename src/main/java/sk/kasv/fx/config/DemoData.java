@@ -42,7 +42,9 @@ public class DemoData implements CommandLineRunner {
     }
     private ProviderProfile provider(String email, String name, String location, String description) {
         User user = users.save(new User(email, passwords.encode("DemoHeslo123!"), Role.PROVIDER));
-        return providers.save(new ProviderProfile(user, name, description, location, "Demo kontakt", null, true));
+        ProviderProfile profile = new ProviderProfile(user, name, description, location, "Demo kontakt", null, true);
+        profile.startTrial(java.time.Instant.now());
+        return providers.save(profile);
     }
     private void service(ProviderProfile provider, Category category, String name, String description, String price, PriceUnit unit) {
         Service s = new Service(); s.setProvider(provider); s.setCategory(category); s.setName(name);

@@ -22,7 +22,7 @@ import { IconComponent } from '../shared/icon.component';
         @if (register) {
           <small>Najmenej 10 znakov, najviac 72 bajtov.</small>
           <label>Chcem<select name="role" [(ngModel)]="role"><option value="CUSTOMER">Objednávať služby</option><option value="PROVIDER">Ponúkať služby</option></select></label>
-          @if (role === 'PROVIDER') { <p class="small-muted">Účet poskytovateľa môžete vytvoriť. Editor profilu a ponúk je zatiaľ dostupný cez API; webový editor pripraví kolega.</p> }
+          @if (role === 'PROVIDER') { <p class="small-muted">Prvých 30 dní od vytvorenia profilu zdarma, potom 10 € mesačne. Celá cena zákazky patrí vám. Zákaznícky účet je zdarma.</p> }
         }
         @if (error()) { <div class="notice error" role="alert">{{ error() }}</div> }
         <button class="button full-width" type="submit" [disabled]="form.invalid || busy()">{{ busy() ? 'Chvíľku strpenia…' : register ? 'Vytvoriť účet' : 'Prihlásiť sa' }} <app-icon name="arrow" /></button>
@@ -42,6 +42,6 @@ export class AuthComponent {
     if (this.busy()) return;
     this.busy.set(true); this.error.set('');
     const request = this.register ? this.api.register({ email: this.email, password: this.password, role: this.role }) : this.api.login({ email: this.email, password: this.password });
-    request.subscribe({ next: () => { this.busy.set(false); void this.router.navigateByUrl('/'); }, error: error => { this.busy.set(false); this.error.set(apiError(error)); } });
+    request.subscribe({ next: auth => { this.busy.set(false); void this.router.navigateByUrl(auth.user.role === 'PROVIDER' ? '/profil' : '/'); }, error: error => { this.busy.set(false); this.error.set(apiError(error)); } });
   }
 }

@@ -26,6 +26,27 @@ public class ProviderProfile {
     private String profileImage;
 
     private boolean availability;
+    private java.time.Instant subscriptionStart;
+    private java.time.Instant subscriptionEnd;
+    private boolean subscriptionPaid;
+    public java.time.Instant getSubscriptionStart() { return subscriptionStart; }
+    public java.time.Instant getSubscriptionEnd() { return subscriptionEnd; }
+    public boolean isSubscriptionPaid() { return subscriptionPaid; }
+    public void startTrial(java.time.Instant now) {
+        if (subscriptionStart != null) return;
+        subscriptionStart = now;
+        subscriptionEnd = now.plus(java.time.Duration.ofDays(30));
+        subscriptionPaid = false;
+    }
+    public boolean hasSubscription(java.time.Instant now) {
+        return subscriptionStart != null && !now.isBefore(subscriptionStart)
+                && subscriptionEnd != null && now.isBefore(subscriptionEnd);
+    }
+    public void activatePaidMonth(java.time.Instant now) {
+        subscriptionStart = now;
+        subscriptionEnd = now.atZone(java.time.ZoneId.of("Europe/Bratislava")).plusMonths(1).toInstant();
+        subscriptionPaid = true;
+    }
 
     public ProviderProfile() {
     }

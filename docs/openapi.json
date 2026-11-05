@@ -1490,6 +1490,71 @@
           }
         }
       }
+    },
+    "/api/providers/me/subscription": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Own provider subscription: 30-day trial then EUR 10 monthly",
+        "responses": {
+          "404": {
+            "description": "Profile missing"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            },
+            "description": "Subscription status"
+          },
+          "403": {
+            "description": "Provider role required"
+          }
+        }
+      }
+    },
+    "/api/providers/me/subscription/demo-payment": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Simulate one calendar month payment after expiry (demo only)",
+        "responses": {
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Provider role required"
+          },
+          "409": {
+            "description": "Subscription still valid"
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            },
+            "description": "Subscription status"
+          },
+          "404": {
+            "description": "Profile missing"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2042,6 +2107,52 @@
           },
           "totalPages": {
             "type": "integer"
+          }
+        }
+      },
+      "SubscriptionResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "monthlyFee",
+          "currency",
+          "canReceiveOrders",
+          "demoPayment"
+        ],
+        "properties": {
+          "demoPayment": {
+            "type": "boolean"
+          },
+          "canReceiveOrders": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "TRIAL",
+              "ACTIVE",
+              "EXPIRED"
+            ],
+            "type": "string"
+          },
+          "monthlyFee": {
+            "type": "number",
+            "example": 10
+          },
+          "subscriptionStart": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "subscriptionEnd": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "currency": {
+            "enum": [
+              "EUR"
+            ],
+            "type": "string"
           }
         }
       }

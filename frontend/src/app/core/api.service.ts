@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpInterceptorFn, HttpParams } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { AuthResponse, CategoryResponse, LoginRequest, OrderRequest, OrderResponse, OrderStatus, PageResponse, RegisterRequest, ServiceResponse } from './api-types';
+import { ProviderRequest, ProviderResponse, SubscriptionResponse, AuthResponse, CategoryResponse, LoginRequest, OrderRequest, OrderResponse, OrderStatus, PageResponse, RegisterRequest, ServiceResponse } from './api-types';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
@@ -34,8 +34,11 @@ export class ApiService {
   private http = inject(HttpClient);
   private session = inject(SessionService);
   readonly info = signal<AppInfo | null>(null);
-  loadInfo() { this.http.get<AppInfo>('/api/info').subscribe({ next: value => 
-this.info.set(value), error: () => this.info.set(null) }); }
+  loadInfo() { this.http.get<AppInfo>('/api/info').subscribe({ next: value => this.info.set(value), error: () => this.info.set(null) }); }
+  myProfile() { return this.http.get<ProviderResponse>('/api/providers/me'); }
+  saveProfile(request: ProviderRequest) { return this.http.put<ProviderResponse>('/api/providers/me', { name: request.name, description: request.description, location: request.location, phone: request.phone, profileImage: request.profileImage, availability: request.availability }); }
+  subscription() { return this.http.get<SubscriptionResponse>('/api/providers/me/subscription'); }
+  demoSubscriptionPayment() { return this.http.post<SubscriptionResponse>('/api/providers/me/subscription/demo-payment', {}); }
   categories() { return this.http.get<CategoryResponse[]>('/api/categories'); }
   services(filters: { q?: string; location?: string; categoryId?: number; page?: number }) {
     let params = new HttpParams().set('size', 6).set('page', filters.page ?? 0);
@@ -57,6 +60,7 @@ export function apiError(error: unknown): string {
   if (!(error instanceof HttpErrorResponse)) return 'Niečo sa nepodarilo. Skúste to znova.';
   if (error.status === 0 || error.status >= 500) return 'Backend momentálne neodpovedá. Skontrolujte jeho spustenie a skúste to znova.';
   if (error.status === 401) return 'Prihlásenie zlyhalo alebo vypršalo. Skontrolujte údaje a prihláste sa znova.';
+  if (error.status === 402) return 'Predplatné poskytovateľa vypršalo. Na prijímanie nových zákaziek je potrebné predplatné 10 € mesačne.';
   if (error.status === 403) return 'Na túto akciu nemáte oprávnenie.';
   if (error.status === 404) return 'Požadovaný záznam sa nenašiel.';
   if (error.status === 409) return 'Údaje sú v konflikte. E-mail môže byť obsadený alebo sa zmenil stav služby či objednávky.';

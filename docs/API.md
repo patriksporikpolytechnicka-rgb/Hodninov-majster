@@ -160,3 +160,14 @@ Sieťové chyby a 5xx nemusia mať tento formát; zobrazte všeobecné hlásenie
 5. Pri integrácii vymeniť mock službu za HttpClient a pridávať Bearer hlavičku len na adresu tohto backendu.
 
 Základný Angular frontend je pripravený v priečinku frontend/. Chat, hodnotenia, platby a kompletná administrácia sú ďalšie etapy.
+
+## Predplatné poskytovateľa
+GET /api/providers/me/subscription (iba PROVIDER) vracia status TRIAL/ACTIVE/EXPIRED,
+subscriptionStart a subscriptionEnd (UTC ISO-8601), monthlyFee = 10.00, currency = EUR,
+canReceiveOrders a demoPayment. PUT /api/providers/me začína 30-dňový trial iba pri
+prvom vytvorení profilu. Zmeny profilu nemenia jeho dátumy.
+POST /api/providers/me/subscription/demo-payment bez tela simuluje mesačnú platbu
+iba v demo režime a iba po vypršaní predplatného. V produkcii vracia 403.
+Nová objednávka alebo prijatie objednávky pri vypršaní predplatného vracia 402.
+Cena objednávky zostáva cena služby × množstvo, bez provízie.
+Produkčné inkaso a automatické obnovovanie zatiaľ nie sú implementované.
