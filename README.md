@@ -87,7 +87,14 @@ Pre vývoj s lokálnym PostgreSQL (na tomto počítači port 6966):
 Setup si vypýta heslo superusera postgres. Súbor .env.local je v .gitignore a necommituje sa.
 Iný port: `.\setup-local-db.ps1 -Port 5432`.
 
-## Školská databáza – neskôr
+## Školská databáza
+
+Databáza hodinovy_majster_db na cloud.kosickaakademia.sk:5432 má tabuľky aj základné kategórie.
+V koreni projektu vytvorte .env.school (DB_URL, DB_USERNAME, DB_PASSWORD, JWT_SECRET) a spustite:
+
+```powershell
+.\start-local.ps1 -EnvFile .env.school -Profiles ''
+```
 
 Pre PostgreSQL nepoužite profil demo. Nastavte DB_URL, DB_USERNAME, DB_PASSWORD a náhodný
 JWT_SECRET s aspoň 32 bajtmi. FRONTEND_ORIGIN je predvolene http://localhost:4200.

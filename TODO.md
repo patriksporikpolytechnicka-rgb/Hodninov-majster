@@ -12,13 +12,14 @@ Technológie: Angular + TypeScript, Java + Spring Boot, PostgreSQL.
 - [x] Demo v2: tlačidlá ukážkových účtov a pravdivý horný pruh cez app.demo-accounts.
 - [x] Web na localhost:8080 zobrazuje katalóg a prihlásenie s dátami z PostgreSQL.
 
-## Odložené – PostgreSQL na školskom serveri
+## PostgreSQL na školskom serveri – 5. 11. 2026
 
-- [ ] Vytvoriť samostatnú databázu a používateľa na školskom serveri.
-- [ ] Zistiť host, port, názov databázy a požiadavky na školskú sieť/VPN/SSL.
-- [x] Nastaviť DB_URL, DB_USERNAME a DB_PASSWORD lokálne; heslo neukladať do repozitára.
-- [ ] Dohodnúť vytváranie schémy a oprávnenia; Hibernate update používať iba vo vlastnej vývojovej databáze, nie nad zdieľanými produkčnými tabuľkami.
-- [ ] Overiť spustenie Spring Bootu s PostgreSQL. (lokálne overené 4. 10. 2026, na školskom serveri ešte nie)
+- [x] Vytvoriť samostatnú databázu a používateľa na školskom serveri. (hodinovy_majster_db, hodinovy_majster_admin)
+- [x] Zistiť host, port, názov databázy a požiadavky na školskú sieť/VPN/SSL. (cloud.kosickaakademia.sk:5432)
+- [x] Nastaviť DB_URL, DB_USERNAME a DB_PASSWORD lokálne; heslo neukladať do repozitára. (.env.local, .env.school)
+- [x] Dohodnúť vytváranie schémy a oprávnenia; Hibernate update používať iba vo vlastnej vývojovej databáze, nie nad zdieľanými produkčnými tabuľkami. (tabuľky vytvorené raz cez profil local, ďalej iba validate)
+- [x] Overiť spustenie Spring Bootu s PostgreSQL. (lokálne aj na školskom serveri)
+- [x] Základné kategórie na školskom serveri (db/school-categories.sql).
 - [ ] Spustiť UserRepositoryPostgresTest a potvrdiť uloženie/načítanie používateľa a rollback. (lokálne overené 4. 10. 2026, na školskom serveri ešte nie)
 
 ## Backend a podklady pre frontend
@@ -63,7 +64,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [x] OpenAPI kontrakt, TypeScript typy, ukážkové JSON dáta a návod v docs/.
 - [x] Unit/MVC testy oprávnení, ceny, stavov, JWT a vstupov (úspešne spustené 28. 9. 2026).
 - [x] Prešlo 26 unit/MVC testov a integračný demo test.
-- [ ] So správcom databázy pripraviť prvý ADMIN účet a základné kategórie.
+- [ ] So správcom databázy pripraviť prvý ADMIN účet a základné kategórie. (kategórie hotové 5. 11. 2026, ADMIN ešte nie)
 - [ ] Overiť JPA mapovania, filtre, unikátnosť a súbežné zmeny na PostgreSQL. (mapovania lokálne overené 4. 10. 2026; filtre, unikátnosť a súbežnosť zatiaľ nie)
 - [ ] Doplniť databázové migrácie pred produkčným nasadením.
 - [ ] Pred verejným nasadením doplniť obmedzenie pokusov o prihlásenie a HTTPS.
@@ -76,4 +77,4 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [x] Spustenie webu cez start-demo.ps1, dokumentácia docs/DEMO.md.
 - [x] Angular production build a backendový integračný test celého objednávkového procesu.
 - [ ] Kolega: doplniť webový editor profilu poskytovateľa a jeho služieb.
-- [ ] Dokončiť reálne prepojenie a integračné overenie na školskej PostgreSQL.
+- [ ] Dokončiť reálne prepojenie a integračné overenie na školskej PostgreSQL. (prepojenie hotové, registrácia a profil overené; objednávky čakajú na editor služieb)
