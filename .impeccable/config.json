@@ -1,0 +1,125 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-1-desktop.html"
+        ],
+        "createdAt": "2026-11-05T14:58:38.482Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-1-mobile.html"
+        ],
+        "createdAt": "2026-11-05T14:58:38.685Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-2-desktop.html"
+        ],
+        "createdAt": "2026-11-05T14:58:38.905Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-2-mobile.html"
+        ],
+        "createdAt": "2026-11-05T14:58:39.117Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-4-desktop.html"
+        ],
+        "createdAt": "2026-11-05T14:58:39.346Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-4-mobile.html"
+        ],
+        "createdAt": "2026-11-05T14:58:39.589Z",
+        "reason": "user chose palettes 1-4 in chat on 2026-11-05; background is the palette's own colour"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-2-mobile.html"
+        ],
+        "createdAt": "2026-11-05T14:58:39.800Z",
+        "reason": "photo placeholder with centered icon and tab bar spaced by space-around; not text against an edge"
+      },
+      {
+        "rule": "nested-cards",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-4-mobile.html"
+        ],
+        "createdAt": "2026-11-05T14:58:40.033Z",
+        "reason": "bottom sheet over a map holding list items; standard map-app pattern"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-3-desktop.html"
+        ],
+        "createdAt": "2026-11-05T15:05:50.495Z",
+        "reason": "user asked for tan backgrounds instead of white in chat on 2026-11-05"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-2/idea-3-mobile.html"
+        ],
+        "createdAt": "2026-11-05T15:05:50.685Z",
+        "reason": "user asked for tan backgrounds instead of white in chat on 2026-11-05"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-3/idea-5-desktop.html"
+        ],
+        "createdAt": "2026-11-05T15:11:26.491Z",
+        "reason": "user asked for tan backgrounds instead of white in chat on 2026-11-05"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "design/mockups-3/idea-5-mobile.html"
+        ],
+        "createdAt": "2026-11-05T15:11:26.693Z",
+        "reason": "user asked for tan backgrounds instead of white in chat on 2026-11-05"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "design/mockups-3/idea-5-mobile.html"
+        ],
+        "createdAt": "2026-11-05T15:11:50.824Z",
+        "reason": "photo placeholder tile with a centered icon, same pattern as idea-2-mobile; not text against an edge"
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=390"><title>Nápad 2 · Mriežka · mobil</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" rel="stylesheet">
+<link href="categories.css" rel="stylesheet">
+<style>
+:root{--prim:#C9A227;--dark:#1F3B33;--bg:#E8E4D3;--card:#F6F3E8;--line:#D6D0B9;--muted:#55605A}
+*{box-sizing:border-box;margin:0}
+body{width:390px;background:var(--bg);color:var(--dark);font-family:Figtree,sans-serif;font-size:15px}
+.bar{background:var(--dark);color:#fff;padding:14px 16px 16px}
+.row1{display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px}
+.logo i{background:var(--prim);color:var(--dark);border-radius:7px;width:28px;height:28px;display:grid;place-items:center;font-size:17px}
+.row1 .x{font-size:22px}
+.s{margin-top:12px;background:var(--card);border-radius:12px;padding:11px 14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.s .f{margin-left:auto;color:var(--dark);font-size:19px}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
+.c{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.c i{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:24px}
+.c.on i{background:var(--dark);color:var(--prim)}
+.h{display:flex;justify-content:space-between;padding:0 16px 10px;font-size:14px;color:var(--muted)}.h b{color:var(--dark);font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.top{height:92px;display:grid;place-items:center;font-size:34px;position:relative}
+.top .k{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;background:rgba(255,255,255,.6);border-radius:99px;padding:3px 8px}
+.b{padding:10px 12px 12px}.p{font-size:18px;font-weight:800}.p small{font-size:12px;font-weight:500;color:var(--muted)}
+.t{font-weight:600;font-size:14px;margin:2px 0 6px;line-height:1.3}.m{font-size:12px;color:var(--muted)}
+.tab{position:fixed;bottom:0;width:390px;background:var(--dark);color:#B8C7BF;display:flex;justify-content:space-around;padding:10px 12px 14px;font-size:11px;font-weight:600}
+.tab span{display:flex;flex-direction:column;align-items:center;gap:3px}.tab i{font-size:22px}
+.tab .on{color:#fff}.tab .plus i{background:var(--prim);color:var(--dark);border-radius:12px;width:40px;height:32px;display:grid;place-items:center}
+</style></head><body>
+<div class="bar"><div class="row1"><div class="logo"><i class="ti ti-tool"></i>Hodinový majster</div><i class="ti ti-bell x"></i></div>
+<div class="s"><i class="ti ti-search"></i>Hľadať v Košiciach<i class="ti ti-adjustments-horizontal f"></i></div></div>
+<div class="cats"><div class="c on"><i class="ti ti-layout-grid"></i>Všetko</div><div class="c c-dom"><i class="ti ti-hammer cbg"></i>Domácnosť</div><div class="c c-zah"><i class="ti ti-plant-2 cbg"></i>Záhrada</div><div class="c c-it"><i class="ti ti-device-laptop cbg"></i>IT pomoc</div></div>
+<div class="h"><b>8 ponúk</b><span>Najnižšia cena</span></div>
+<div class="grid">
+<div class="card c-dom"><div class="top cbg"><span class="k">Domácnosť</span><i class="ti ti-paint"></i></div><div class="b"><div class="p">8 € <small>/ m²</small></div><div class="t">Maľovanie izby</div><div class="m">Prešov</div></div></div>
+<div class="card c-zah"><div class="top cbg"><span class="k">Záhrada</span><i class="ti ti-plant-2"></i></div><div class="b"><div class="p">12 € <small>/ m²</small></div><div class="t">Výsadba záhonov</div><div class="m">Prešov</div></div></div>
+<div class="card c-zah"><div class="top cbg"><span class="k">Záhrada</span><i class="ti ti-leaf"></i></div><div class="b"><div class="p">18 € <small>/ hod</small></div><div class="t">Kosenie záhrady</div><div class="m">Prešov</div></div></div>
+<div class="card c-sta"><div class="top cbg"><span class="k">Sťahovanie</span><i class="ti ti-truck"></i></div><div class="b"><div class="p">20 € <small>/ hod</small></div><div class="t">Pomoc so sťahovaním</div><div class="m">Košice</div></div></div>
+<div class="card c-dom"><div class="top cbg"><span class="k">Domácnosť</span><i class="ti ti-tool"></i></div><div class="b"><div class="p">22 € <small>/ hod</small></div><div class="t">Drobné opravy</div><div class="m">Košice</div></div></div>
+<div class="card c-dom"><div class="top cbg"><span class="k">Domácnosť</span><i class="ti ti-hammer"></i></div><div class="b"><div class="p">25,50 € <small>/ hod</small></div><div class="t">Montáž nábytku</div><div class="m">Košice</div></div></div>
+</div>
+<div class="tab"><span class="on"><i class="ti ti-search"></i>Hľadať</span><span><i class="ti ti-heart"></i>Uložené</span><span class="plus"><i class="ti ti-plus"></i>Ponúknuť</span><span><i class="ti ti-clipboard-list"></i>Objednávky</span><span><i class="ti ti-user"></i>Profil</span></div>
+</body></html>

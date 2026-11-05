@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=390"><title>Nápad 4 · Police podľa kategórií · mobil</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" rel="stylesheet">
+<link href="categories.css" rel="stylesheet">
+<style>
+:root{--prim:#D4A23A;--dark:#4A3426;--bg:#EEE4D2;--card:#FBF7EF;--line:#DCCDB3;--muted:#6B5A4C}
+*{box-sizing:border-box;margin:0}
+body{width:390px;background:var(--bg);color:var(--dark);font-family:'Hanken Grotesk',sans-serif;font-size:15px}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--dark);color:#fff}
+.logo{font-weight:800;font-size:18px}.logo span{color:var(--prim)}.bar i{font-size:23px}
+.ask{padding:20px 16px 16px}
+.ask h1{font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.sb{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.sb b{margin-left:auto;background:var(--dark);color:#fff;border-radius:8px;padding:6px 10px;font-size:13px}
+.shelf{margin:0 10px 10px;border-radius:18px;padding:16px 0 16px 14px}
+.h{display:flex;align-items:center;gap:10px;padding-right:14px;margin-bottom:12px}
+.h i{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.5);display:grid;place-items:center;font-size:20px}
+.h b{font-size:18px}.h span{margin-left:auto;font-size:13px;font-weight:700}
+.row{display:flex;gap:10px;overflow:hidden}
+.card{flex:0 0 240px;background:var(--card);border-radius:14px;padding:14px;color:var(--dark)}
+.t{font-weight:700}.who{font-size:13px;color:var(--muted);margin:3px 0 12px}
+.pr{display:flex;justify-content:space-between;align-items:baseline}.pr b{font-size:19px;font-weight:800}.pr small{color:var(--muted);font-size:12px}
+.pr span{background:var(--prim);border-radius:8px;padding:6px 10px;font-weight:700;font-size:13px}
+.band{margin:14px 10px 24px;background:var(--dark);color:#F1E7D8;border-radius:16px;padding:18px}
+.band b{color:#fff;font-size:17px;display:block}.band p{font-size:13px;margin:6px 0 12px}
+.band span{display:inline-block;background:var(--prim);color:var(--dark);border-radius:10px;padding:10px 14px;font-weight:800}
+</style></head><body>
+<div class="bar"><div class="logo">hodinový<span>majster</span></div><i class="ti ti-menu-2"></i></div>
+<div class="ask"><h1>S čím vám dnes môžeme pomôcť?</h1><div class="sb"><i class="ti ti-search"></i>Čo treba urobiť?<b>Hľadať</b></div></div>
+<section class="shelf c-dom cbg"><div class="h"><i class="ti ti-hammer"></i><b>Domácnosť</b><span>Všetky 3 →</span></div><div class="row">
+<div class="card"><div class="t">Montáž nábytku</div><div class="who">Peter Novák · Košice</div><div class="pr"><div><b>25,50 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Drobné opravy</div><div class="who">Peter Novák · Košice</div><div class="pr"><div><b>22,00 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+</div></section>
+<section class="shelf c-zah cbg"><div class="h"><i class="ti ti-plant-2"></i><b>Záhrada</b><span>Všetky 2 →</span></div><div class="row">
+<div class="card"><div class="t">Kosenie záhrady</div><div class="who">Lucia Zelená · Prešov</div><div class="pr"><div><b>18,00 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Výsadba záhonov</div><div class="who">Lucia Zelená · Prešov</div><div class="pr"><div><b>12,00 €</b> <small>/ m²</small></div><span>Objednať</span></div></div>
+</div></section>
+<section class="shelf c-it cbg"><div class="h"><i class="ti ti-device-laptop"></i><b>IT pomoc</b><span>Všetky 2 →</span></div><div class="row">
+<div class="card"><div class="t">Počítač a Wi-Fi</div><div class="who">Martin Kováč · Košice</div><div class="pr"><div><b>30,00 €</b> <small>/ zák.</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Oprava notebooku</div><div class="who">Martin Kováč · Košice</div><div class="pr"><div><b>35,00 €</b> <small>/ zák.</small></div><span>Objednať</span></div></div>
+</div></section>
+<div class="band"><b>Ponúkate služby?</b><p>30 dní zadarmo, potom 10 € mesačne. Bez provízie.</p><span>Začať ponúkať</span></div>
+</body></html>

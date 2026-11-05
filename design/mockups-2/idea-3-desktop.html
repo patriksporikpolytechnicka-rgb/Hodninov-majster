@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><title>Nápad 3 · Kategórie najprv · desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" rel="stylesheet">
+<link href="categories.css" rel="stylesheet">
+<style>
+:root{--prim:#E0B84C;--dark:#1E2A44;--bg:#ECE8DD;--neu:#D8D2C2;--acc:#D96B2B;--muted:#5A6072}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;background:var(--bg);color:var(--dark);font-family:Manrope,sans-serif;font-size:15px}
+.bar{display:flex;align-items:center;gap:28px;padding:18px 64px}
+.logo{font-weight:800;font-size:20px}
+nav{display:flex;gap:22px;color:var(--muted);font-weight:500}
+.r{margin-left:auto;display:flex;gap:16px;align-items:center;font-weight:600}
+.add{background:var(--dark);color:#fff;border-radius:10px;padding:10px 16px;display:flex;gap:6px;align-items:center}
+.hero{margin:8px 64px 0;background:var(--prim);border-radius:24px;padding:48px 56px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:end}
+.hero h1{font-size:46px;line-height:1.08;font-weight:800;letter-spacing:-.02em}
+.hero p{margin-top:14px;font-size:17px;max-width:460px;line-height:1.5;color:#3A3A2E}
+.sb{background:#F8F5EE;border-radius:14px;padding:8px;display:flex;gap:6px}
+.sb div{padding:12px 14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.sb .q{flex:1;border-right:1px solid var(--neu)}
+.sb .go{background:var(--dark);color:#fff;border-radius:10px;font-weight:700}
+.pop{margin-top:12px;font-size:14px;color:#3A3A2E}.pop u{margin-left:10px;text-underline-offset:3px}
+h2{font-size:22px;font-weight:800;margin:44px 64px 16px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{font-size:14px;font-weight:600;color:var(--muted)}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:0 64px}
+.cat{background:#F8F5EE;border-radius:16px;box-shadow:0 0 0 1px var(--neu);padding:20px}
+.cat .ic{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.cat .ic i{width:42px;height:42px;border-radius:12px;background:var(--cb,#F6EDD3);color:var(--ci,inherit);display:grid;place-items:center;font-size:22px}
+.cat .ic b{font-size:17px}.cat .ic span{margin-left:auto;color:var(--muted);font-size:13px}
+.cat li{list-style:none;display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid #EDEDEA;font-size:14px}
+.cat li span{color:var(--muted)}
+ul{padding:0}
+.new{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:0 64px}
+.n{background:#F8F5EE;border-radius:14px;box-shadow:0 0 0 1px var(--neu);padding:16px 18px;display:flex;justify-content:space-between;gap:12px}
+.n .t{font-weight:700}.n .m{color:var(--muted);font-size:13px;margin-top:4px}
+.n .p{font-weight:800;font-size:19px;white-space:nowrap}.n .p small{display:block;font-size:12px;font-weight:500;color:var(--muted);text-align:right}
+.band{margin:44px 64px 48px;background:var(--dark);color:#fff;border-radius:20px;padding:32px 40px;display:flex;align-items:center;gap:32px}
+.band b{font-size:22px}.band p{color:#C5CBDA;margin-top:6px}
+.band .cta{margin-left:auto;background:var(--prim);color:var(--dark);border-radius:12px;padding:14px 22px;font-weight:800}
+.badge{margin-bottom:6px}.badge span{display:inline-block;border-radius:99px;padding:2px 9px;font-weight:700;font-size:12px}
+</style></head><body>
+<div class="bar"><div class="logo">Hodinový majster</div><nav><span>Ako to funguje</span><span>Pre majstrov</span></nav><div class="r"><span>Prihlásiť sa</span><span class="add"><i class="ti ti-plus"></i>Pridať službu</span></div></div>
+<div class="hero"><div><h1>Potrebujete s niečím pomôcť? Nájdite majstra vo svojom okolí.</h1><p>Cenu vidíte ešte pred objednávkou. Platíte len majstrovi, nič navyše.</p></div>
+<div><div class="sb"><div class="q"><i class="ti ti-search"></i>Čo treba urobiť?</div><div><i class="ti ti-map-pin"></i>Mesto</div><div class="go">Hľadať</div></div><div class="pop">Často hľadané:<u>montáž nábytku</u><u>kosenie</u><u>sťahovanie</u></div></div></div>
+<h2>Kategórie <small>Všetky kategórie →</small></h2>
+<div class="cats">
+<div class="cat c-dom"><div class="ic"><i class="ti ti-hammer"></i><b>Domácnosť</b><span>3</span></div><ul><li>Montáž nábytku<span>1</span></li><li>Drobné opravy<span>1</span></li><li>Maľovanie<span>1</span></li></ul></div>
+<div class="cat c-zah"><div class="ic"><i class="ti ti-plant-2"></i><b>Záhrada</b><span>2</span></div><ul><li>Kosenie<span>1</span></li><li>Výsadba a záhony<span>1</span></li><li>Strihanie stromov<span>0</span></li></ul></div>
+<div class="cat c-it"><div class="ic"><i class="ti ti-device-laptop"></i><b>IT pomoc</b><span>2</span></div><ul><li>Počítač a Wi-Fi<span>1</span></li><li>Oprava notebooku<span>1</span></li><li>Telefóny<span>0</span></li></ul></div>
+<div class="cat c-sta"><div class="ic"><i class="ti ti-truck"></i><b>Sťahovanie</b><span>1</span></div><ul><li>Sťahovanie bytu<span>1</span></li><li>Odvoz nábytku<span>0</span></li><li>Vypratávanie<span>0</span></li></ul></div>
+</div>
+<h2>Najnovšie ponuky <small>Zobraziť všetky →</small></h2>
+<div class="new">
+<div class="n"><div><div class="badge c-dom"><span class="cbg">Domácnosť</span></div><div class="t">Montáž nábytku</div><div class="m">Peter Novák · Košice · pred 2 h</div></div><div class="p">25,50 €<small>za hodinu</small></div></div>
+<div class="n"><div><div class="badge c-zah"><span class="cbg">Záhrada</span></div><div class="t">Kosenie a údržba záhrady</div><div class="m">Lucia Zelená · Prešov · dnes</div></div><div class="p">18,00 €<small>za hodinu</small></div></div>
+<div class="n"><div><div class="badge c-it"><span class="cbg">IT pomoc</span></div><div class="t">Nastavenie počítača a Wi-Fi</div><div class="m">Martin Kováč · Košice · včera</div></div><div class="p">30,00 €<small>za zákazku</small></div></div>
+</div>
+<div class="band"><i class="ti ti-tool" style="font-size:40px;color:var(--prim)"></i><div><b>Ponúkate služby?</b><p>Prvých 30 dní zadarmo, potom 10 € mesačne. Z vašich zákaziek si neberieme nič.</p></div><span class="cta">Začať ponúkať</span></div>
+</body></html>

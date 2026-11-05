@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><title>Nápad 4 · Police podľa kategórií · desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" rel="stylesheet">
+<link href="categories.css" rel="stylesheet">
+<style>
+:root{--prim:#D4A23A;--dark:#4A3426;--bg:#EEE4D2;--card:#FBF7EF;--line:#DCCDB3;--muted:#6B5A4C}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;background:var(--bg);color:var(--dark);font-family:'Hanken Grotesk',sans-serif;font-size:15px}
+.bar{display:flex;align-items:center;gap:28px;padding:16px 64px;background:var(--dark);color:#F1E7D8}
+.logo{font-weight:800;font-size:21px;color:#fff}.logo span{color:var(--prim)}
+nav{display:flex;gap:22px}
+.r{margin-left:auto;display:flex;gap:16px;align-items:center;font-weight:600}
+.add{background:var(--prim);color:var(--dark);border-radius:10px;padding:10px 16px;display:flex;gap:6px;align-items:center}
+.ask{padding:36px 64px 30px;display:flex;align-items:end;gap:40px}
+.ask h1{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.1;max-width:520px}
+.sb{flex:1;background:var(--card);border-radius:14px;padding:8px;display:flex;border:1px solid var(--line)}
+.sb div{padding:12px 14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.sb .q{flex:1;border-right:1px solid var(--line)}
+.sb .go{background:var(--dark);color:#fff;border-radius:10px;font-weight:700}
+.shelf{margin:0 64px 16px;border-radius:22px;padding:24px;display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:stretch}
+.info{display:flex;flex-direction:column}
+.info i{font-size:30px;width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.5);display:grid;place-items:center;margin-bottom:14px}
+.info h2{font-size:24px;font-weight:800}
+.info p{margin:6px 0 auto;font-size:14px;line-height:1.45}
+.info a{font-weight:700;margin-top:14px;text-decoration:none;color:inherit;display:flex;gap:6px;align-items:center}
+.row{display:flex;gap:14px;overflow:hidden;position:relative}
+.card{flex:0 0 290px;background:var(--card);border-radius:16px;padding:18px;display:flex;flex-direction:column;color:var(--dark)}
+.t{font-weight:700;font-size:17px}.who{font-size:14px;color:var(--muted);margin-top:4px;display:flex;gap:6px;align-items:center}
+.d{font-size:14px;color:var(--muted);margin:10px 0 16px;line-height:1.4}
+.pr{margin-top:auto;display:flex;align-items:baseline;justify-content:space-between}
+.pr b{font-size:22px;font-weight:800}.pr small{color:var(--muted)}
+.pr span{background:var(--prim);border-radius:9px;padding:7px 12px;font-weight:700;font-size:14px}
+.next{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--dark);color:#fff;display:grid;place-items:center;font-size:20px}
+.band{margin:24px 64px 40px;background:var(--dark);color:#F1E7D8;border-radius:20px;padding:28px 36px;display:flex;align-items:center;gap:24px}
+.band b{font-size:21px;color:#fff}.band .cta{margin-left:auto;background:var(--prim);color:var(--dark);border-radius:12px;padding:13px 20px;font-weight:800}
+.note{margin:0 64px 24px;font-size:12px;color:var(--muted)}
+</style></head><body>
+<div class="bar"><div class="logo">hodinový<span>majster</span></div><nav><span>Ako to funguje</span><span>Pre majstrov</span></nav><div class="r"><span>Prihlásiť sa</span><span class="add"><i class="ti ti-plus"></i>Pridať službu</span></div></div>
+<div class="ask"><h1>S čím vám dnes môžeme pomôcť?</h1><div class="sb"><div class="q"><i class="ti ti-search"></i>Čo treba urobiť?</div><div><i class="ti ti-map-pin"></i>Košice</div><div class="go">Hľadať</div></div></div>
+
+<section class="shelf c-dom cbg">
+<div class="info"><i class="ti ti-hammer"></i><h2>Domácnosť</h2><p>Montáž, opravy a maľovanie. Veci, na ktoré doma nezostáva čas.</p><a>Všetky 3 ponuky <i class="ti ti-arrow-right"></i></a></div>
+<div class="row">
+<div class="card"><div class="t">Montáž nábytku</div><div class="who"><i class="ti ti-user"></i>Peter Novák · Košice</div><div class="d">Skrine, postele, kuchyne. Náradie mám vlastné.</div><div class="pr"><div><b>25,50 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Drobné opravy v domácnosti</div><div class="who"><i class="ti ti-user"></i>Peter Novák · Košice</div><div class="d">Kohútik, dvierka, poličky, kľučky.</div><div class="pr"><div><b>22,00 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Maľovanie izby</div><div class="who"><i class="ti ti-user"></i>Ján Biely · Prešov</div><div class="d">Zakrytie podláh a nábytku v cene.</div><div class="pr"><div><b>8,00 €</b> <small>/ m²</small></div><span>Objednať</span></div></div>
+</div></section>
+
+<section class="shelf c-zah cbg">
+<div class="info"><i class="ti ti-plant-2"></i><h2>Záhrada</h2><p>Kosenie, záhony a sezónne práce okolo domu.</p><a>Všetky 2 ponuky <i class="ti ti-arrow-right"></i></a></div>
+<div class="row">
+<div class="card"><div class="t">Kosenie a údržba záhrady</div><div class="who"><i class="ti ti-user"></i>Lucia Zelená · Prešov</div><div class="d">Kosenie, strihanie plota, odvoz trávy.</div><div class="pr"><div><b>18,00 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Výsadba a úprava záhonov</div><div class="who"><i class="ti ti-user"></i>Lucia Zelená · Prešov</div><div class="d">Príprava pôdy, výsadba a mulčovanie.</div><div class="pr"><div><b>12,00 €</b> <small>/ m²</small></div><span>Objednať</span></div></div>
+</div></section>
+
+<section class="shelf c-it cbg">
+<div class="info"><i class="ti ti-device-laptop"></i><h2>IT pomoc</h2><p>Počítače, Wi-Fi a technika. Zrozumiteľne a u vás doma.</p><a>Všetky 2 ponuky <i class="ti ti-arrow-right"></i></a></div>
+<div class="row">
+<div class="card"><div class="t">Nastavenie počítača a Wi-Fi</div><div class="who"><i class="ti ti-user"></i>Martin Kováč · Košice</div><div class="d">Nový počítač, tlačiareň alebo slabá Wi-Fi.</div><div class="pr"><div><b>30,00 €</b> <small>/ zákazka</small></div><span>Objednať</span></div></div>
+<div class="card"><div class="t">Oprava notebooku</div><div class="who"><i class="ti ti-user"></i>Martin Kováč · Košice</div><div class="d">Výmena disku, čistenie, nový systém.</div><div class="pr"><div><b>35,00 €</b> <small>/ zákazka</small></div><span>Objednať</span></div></div>
+</div></section>
+
+<section class="shelf c-sta cbg">
+<div class="info"><i class="ti ti-truck"></i><h2>Sťahovanie</h2><p>Krabice, nábytok aj celý byt.</p><a>Všetky ponuky <i class="ti ti-arrow-right"></i></a></div>
+<div class="row">
+<div class="card"><div class="t">Pomoc so sťahovaním</div><div class="who"><i class="ti ti-user"></i>Tomáš Hudák · Košice</div><div class="d">Dvaja ľudia a dodávka.</div><div class="pr"><div><b>20,00 €</b> <small>/ hod</small></div><span>Objednať</span></div></div>
+</div></section>
+
+<div class="band"><i class="ti ti-tool" style="font-size:36px;color:var(--prim)"></i><div><b>Ponúkate služby?</b><div>Prvých 30 dní zadarmo, potom 10 € mesačne. Bez provízie zo zákaziek.</div></div><span class="cta">Začať ponúkať</span></div>
+<div class="note">Ukážkové dáta</div>
+</body></html>

@@ -1,0 +1,7 @@
+/* Pale category colours shared by all ideas: --cb background, --ci text/icon */
+.c-dom{--cb:#EFD9C7;--ci:#7A3E1D}
+.c-zah{--cb:#DCE5CC;--ci:#3E5223}
+.c-it{--cb:#D6E0E8;--ci:#2C4559}
+.c-sta{--cb:#E2DAE6;--ci:#4E3D5C}
+.cbg{background:var(--cb);color:var(--ci)}
+.cink{color:var(--ci)}
