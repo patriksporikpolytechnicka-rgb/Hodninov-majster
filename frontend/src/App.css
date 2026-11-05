@@ -1,0 +1,472 @@
+/* ---------- Hero with search ---------- */
+.hero {
+  margin: 4px var(--page-pad) 0;
+  background: var(--yellow);
+  border-radius: 24px;
+  padding: 40px 52px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: end;
+}
+
+.hero h1 {
+  font-size: 42px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero p {
+  margin-top: 12px;
+  font-size: 17px;
+  color: #3A3A2E;
+  max-width: 440px;
+}
+
+.search {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  color: var(--text-muted);
+}
+
+.search-what {
+  flex: 1;
+  border-right: 1px solid var(--line);
+}
+
+.search-where {
+  width: 180px;
+}
+
+.search-field input {
+  border: 0;
+  background: none;
+  outline: none;
+  width: 100%;
+  padding: 12px 0;
+  color: var(--navy);
+}
+
+.search-field:focus-within {
+  color: var(--navy);
+}
+
+.search-go {
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+  padding: 0 22px;
+  cursor: pointer;
+}
+
+.popular {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.popular button {
+  border: 0;
+  background: none;
+  padding: 0;
+  margin-left: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- Category tiles ---------- */
+.tiles {
+  display: flex;
+  gap: 12px;
+  padding: 28px var(--page-pad) 6px;
+}
+
+.tile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--cat-bg, var(--card));
+  color: var(--cat-ink, var(--navy));
+  text-align: left;
+  cursor: pointer;
+}
+
+.tile b {
+  display: block;
+  font-weight: 800;
+}
+
+.tile small {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tile-icon {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.55);
+}
+
+.tile.is-on {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.tile-all {
+  background: var(--navy);
+  color: #fff;
+}
+
+.tile-all .tile-icon {
+  background: var(--yellow);
+  color: var(--navy);
+}
+
+/* ---------- Results ---------- */
+.results {
+  padding: 18px var(--page-pad) 0;
+}
+
+.results-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.results-head h2 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 99px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--navy);
+}
+
+.card-top {
+  position: relative;
+  height: 118px;
+  display: grid;
+  place-items: center;
+  background: var(--cat-bg, var(--line));
+  color: var(--cat-ink, var(--navy));
+}
+
+.card-icon {
+  width: 52px;
+  height: 52px;
+}
+
+.card-tag {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgb(255 255 255 / 0.6);
+  border-radius: 99px;
+  padding: 4px 10px;
+}
+
+.card-body {
+  padding: 14px 16px 16px;
+}
+
+.card-price {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.card-price small {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 4px 0 10px;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.empty {
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+}
+
+.empty h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.empty p,
+.notice {
+  color: var(--text-muted);
+}
+
+.more {
+  display: block;
+  margin: 24px auto 0;
+  border: 1px solid var(--navy);
+  background: none;
+  border-radius: var(--radius);
+  padding: 10px 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- Provider band and footer ---------- */
+.band {
+  margin: 36px var(--page-pad) 24px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 20px;
+  padding: 28px 36px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.band b {
+  font-size: 21px;
+}
+
+.band p {
+  color: #C5CBDA;
+  margin-top: 4px;
+}
+
+.band-icon {
+  color: var(--yellow);
+  flex: none;
+}
+
+.band-cta {
+  margin-left: auto;
+  padding: 13px 20px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px var(--page-pad) 32px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .tiles {
+    flex-wrap: wrap;
+  }
+
+  .tile {
+    flex: 1 1 200px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 720px) {
+  .hero {
+    margin: 0 12px;
+    padding: 22px 18px;
+    gap: 16px;
+  }
+
+  .hero h1 {
+    font-size: 27px;
+    line-height: 1.12;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .search {
+    flex-wrap: wrap;
+    background: none;
+    padding: 0;
+    gap: 8px;
+  }
+
+  .search-field {
+    background: var(--card);
+    border-radius: 12px;
+  }
+
+  .search-what {
+    flex: 1 1 100%;
+    border-right: 0;
+  }
+
+  .search-where {
+    flex: 1;
+    width: auto;
+  }
+
+  .search-go {
+    flex: 0 0 96px;
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  /* Category tiles become a row of icons with labels under them */
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    padding: 18px 12px 14px;
+  }
+
+  .tile {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    background: none;
+    color: var(--navy);
+    text-align: center;
+    font-size: 11px;
+  }
+
+  .tile b {
+    font-weight: 700;
+  }
+
+  .tile small {
+    display: none;
+  }
+
+  .tile-icon {
+    width: 52px;
+    height: 52px;
+    padding: 9px;
+    border-radius: 16px;
+    background: var(--cat-bg);
+    color: var(--cat-ink);
+  }
+
+  .tile-all {
+    background: none;
+  }
+
+  .tile.is-on {
+    outline: 0;
+  }
+
+  .tile.is-on .tile-icon {
+    outline: 2px solid var(--navy);
+    outline-offset: 2px;
+  }
+
+  .grid {
+    gap: 10px;
+  }
+
+  .card-top {
+    height: 100px;
+    padding-top: 18px;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .card-body {
+    padding: 10px 12px 12px;
+  }
+
+  .card-price {
+    font-size: 18px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .card-meta span:first-child {
+    display: none;
+  }
+
+  .band {
+    margin: 16px;
+    padding: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .band-icon {
+    display: none;
+  }
+
+  .band-cta {
+    margin-left: 0;
+  }
+}

@@ -1,10 +1,52 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* Colours from the final design (palette 3, design/mockups-3) */
+:root {
+  --yellow: #E0B84C;
+  --navy: #1E2A44;
+  --bg: #ECE8DD;
+  --card: #F8F5EE;
+  --line: #D8D2C2;
+  --text-muted: #535A6B;
+  --orange: #D96B2B;
+
+  --radius: 10px;
+  --radius-lg: 16px;
+  --page-pad: 64px;
+  --font: 'Manrope', system-ui, sans-serif;
 }
 
-main {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px;
+/* Pale category colours: --cat-bg for tiles, --cat-ink for text and icons */
+.cat-domacnost { --cat-bg: #EFD9C7; --cat-ink: #7A3E1D; }
+.cat-zahrada { --cat-bg: #DCE5CC; --cat-ink: #3E5223; }
+.cat-it-pomoc { --cat-bg: #D6E0E8; --cat-ink: #2C4559; }
+.cat-stahovanie { --cat-bg: #E2DAE6; --cat-ink: #4E3D5C; }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--navy);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --page-pad: 16px;
+  }
 }
