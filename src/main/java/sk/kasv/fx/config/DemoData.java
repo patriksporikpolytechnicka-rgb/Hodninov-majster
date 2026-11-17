@@ -26,6 +26,7 @@ public class DemoData implements CommandLineRunner {
     public void run(String... args) {
         if (users.existsByEmail("zakaznik@demo.sk")) return;
         users.save(new User("zakaznik@demo.sk", passwords.encode("DemoHeslo123!"), Role.CUSTOMER));
+        users.save(new User("admin@demo.sk", passwords.encode("DemoHeslo123!"), Role.ADMIN));
         Category home = category("Domácnosť"), garden = category("Záhrada"), it = category("IT pomoc"), moving = category("Sťahovanie");
         ProviderProfile peter = provider("majster@demo.sk", "Peter Novák", "Košice", "Pomôžem s montážou nábytku a drobnými opravami. Záleží mi na čistom výsledku aj poriadku po práci.");
         ProviderProfile lucia = provider("zahrada@demo.sk", "Lucia Zelená", "Prešov", "Postarám sa o trávnik, záhony aj sezónne práce vo vašej záhrade.");

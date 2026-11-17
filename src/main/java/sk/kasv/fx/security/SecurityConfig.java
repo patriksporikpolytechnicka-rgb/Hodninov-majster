@@ -83,7 +83,8 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/", "/index.html", "/*.js", "/*.css", "/favicon.svg", "/assets/**",
-                                "/sluzby/*", "/objednavky", "/profil", "/prihlasenie", "/registracia", "/api/info").permitAll()
+                                "/sluzby/*", "/objednavky", "/profil", "/prihlasenie", "/registracia", "/api/info",
+                                "/objednavky/*", "/moje-sluzby", "/poskytovatelia/*", "/admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me", "/api/providers/me", "/api/services/mine").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/providers/*", "/api/services", "/api/services/*").permitAll()
