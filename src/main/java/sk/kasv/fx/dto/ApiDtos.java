@@ -47,5 +47,9 @@ public final class ApiDtos {
                     page.getTotalElements(), page.getTotalPages());
         }
     }
+    public record ReviewRequest(@NotNull @Min(1) @Max(5) Integer rating, @Size(max = 1000) String comment) {}
+    public record ReviewResponse(Long id, Long orderId, Long providerId, String serviceName,
+            int rating, String comment, LocalDateTime createdAt) {}
+    public record RatingResponse(Long providerId, Double average, long count) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

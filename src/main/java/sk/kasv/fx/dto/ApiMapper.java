@@ -21,4 +21,8 @@ public final class ApiMapper {
                 o.getUnitPrice(), o.getPriceUnit(), o.getQuantity(), o.getTotalPrice(),
                 o.getAddress(), o.getNote(), o.getCreatedAt());
     }
+    public static ReviewResponse review(Review r) {
+        return new ReviewResponse(r.getId(), r.getOrder().getId(), r.getProvider().getId(),
+                r.getOrder().getServiceName(), r.getRating(), r.getComment(), r.getCreatedAt());
+    }
 }

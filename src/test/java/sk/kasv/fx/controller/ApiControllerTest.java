@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {AuthController.class, CategoryController.class, ProviderController.class,
-        ServiceController.class, OrderController.class}, properties = {
+        ServiceController.class, OrderController.class, ReviewController.class}, properties = {
         "app.jwt.secret=test-only-key-at-least-thirty-two-bytes-long",
         "app.cors.allowed-origin=http://localhost:4200",
         "spring.jackson.deserialization.fail-on-unknown-properties=true"})
@@ -32,6 +32,7 @@ class ApiControllerTest {
     @MockitoBean AuthService auth;
     @MockitoBean CatalogService catalog;
     @MockitoBean OrderService orders;
+    @MockitoBean ReviewService reviews;
     @MockitoBean CurrentUser current;
 
     @Test void categoriesArePublic() throws Exception {
@@ -78,6 +79,20 @@ class ApiControllerTest {
         String token = encoder.encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue();
         mvc.perform(get("/api/auth/me").header("Authorization", "Bearer " + token)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(7)).andExpect(jsonPath("$.password").doesNotExist());
+    }
+    @Test void providerRatingAndReviewsArePublic() throws Exception {
+        when(reviews.rating(3L)).thenReturn(new RatingResponse(3L, 4.5, 2));
+        mvc.perform(get("/api/providers/3/rating")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.average").value(4.5)).andExpect(jsonPath("$.count").value(2));
+        when(reviews.forProvider(3L, 0, 10)).thenReturn(new PageResponse<>(List.of(), 0, 10, 0, 0));
+        mvc.perform(get("/api/providers/3/reviews")).andExpect(status().isOk());
+    }
+    @Test void writingAReviewNeedsLoginAndValidRating() throws Exception {
+        mvc.perform(post("/api/orders/5/review").contentType(MediaType.APPLICATION_JSON).content("{\"rating\":5}"))
+                .andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/orders/5/review").with(jwt()).contentType(MediaType.APPLICATION_JSON).content("{\"rating\":6}"))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.fieldErrors.rating").exists());
+        verifyNoInteractions(reviews);
     }
     @Test void invalidJwtIsRejected() throws Exception {
         mvc.perform(get("/api/orders/my").header("Authorization", "Bearer invalid-token"))

@@ -171,3 +171,18 @@ iba v demo režime a iba po vypršaní predplatného. V produkcii vracia 403.
 Nová objednávka alebo prijatie objednávky pri vypršaní predplatného vracia 402.
 Cena objednávky zostáva cena služby × množstvo, bez provízie.
 Produkčné inkaso a automatické obnovovanie zatiaľ nie sú implementované.
+
+## Hodnotenia
+
+POST /api/orders/{id}/review (iba CUSTOMER, ktorý objednávku vytvoril; objednávka musí byť COMPLETED) → 201:
+`{"rating":5,"comment":"Rýchlo a čisto."}` – rating 1 až 5, comment nepovinný (max. 1000 znakov).
+Každú objednávku možno ohodnotiť iba raz; druhý pokus vráti 409.
+
+GET /api/orders/{id}/review – hodnotenie objednávky pre zákazníka, poskytovateľa alebo admina; 404, ak ešte nie je.
+
+GET /api/providers/{id}/reviews?page=0&size=10 (verejné) – PageResponse s ReviewResponse, najnovšie prvé:
+`{"id":7,"orderId":5,"providerId":3,"serviceName":"Montáž nábytku","rating":5,"comment":"...","createdAt":"2026-11-19T11:00:00"}`
+
+GET /api/providers/{id}/rating (verejné) → `{"providerId":3,"average":4.5,"count":2}`; average je null, kým nie je žiadne hodnotenie.
+
+Na existujúcej databáze (školský server) musí správca najprv spustiť db/reviews.sql.

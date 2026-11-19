@@ -87,7 +87,8 @@ public class SecurityConfig {
                                 "/objednavky/*", "/moje-sluzby", "/poskytovatelia/*", "/admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me", "/api/providers/me", "/api/services/mine").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/categories", "/api/providers/*", "/api/services", "/api/services/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories", "/api/providers/*", "/api/services", "/api/services/*",
+                                "/api/providers/*/reviews", "/api/providers/*/rating").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(e -> e.authenticationEntryPoint(unauthorized).accessDeniedHandler(forbidden))
                 .oauth2ResourceServer(o -> o.jwt(j -> j.jwtAuthenticationConverter(converter))
