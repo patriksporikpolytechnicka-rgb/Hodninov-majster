@@ -25,7 +25,7 @@ class OrderServiceTest {
     Service service = new Service();
     Order order = new Order();
     @BeforeEach void setup() { provider.startTrial(clock.instant());
-        customer.setId(1L); providerUser.setId(2L); provider.setId(3L); provider.setUser(providerUser); provider.setAvailability(true);
+        customer.setId(1L); customer.setEmailVerified(true); providerUser.setId(2L); provider.setId(3L); provider.setUser(providerUser); provider.setAvailability(true);
         service.setId(4L); service.setProvider(provider); service.setActive(true); service.setName("Assembly");
         service.setPrice(new BigDecimal("25.50")); service.setPriceUnit(PriceUnit.HOUR);
         when(current.require()).thenReturn(customer);
@@ -56,6 +56,12 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
         order.setStatus(OrderStatus.IN_PROGRESS);
         assertThat(expired.changeStatus(5L, new StatusRequest(OrderStatus.COMPLETED)).status()).isEqualTo(OrderStatus.COMPLETED);
+    }
+    @Test void unverifiedCustomerCannotOrder() {
+        customer.setEmailVerified(false);
+        assertThatThrownBy(() -> subject.create(request("1"))).isInstanceOf(ApiException.class)
+                .hasMessage(sk.kasv.fx.security.Verified.MESSAGE);
+        verify(orders, never()).saveAndFlush(any());
     }
     @Test void refusesUnavailableProvider() {
         provider.setAvailability(false);

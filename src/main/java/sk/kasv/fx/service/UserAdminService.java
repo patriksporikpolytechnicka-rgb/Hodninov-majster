@@ -46,7 +46,8 @@ public class UserAdminService {
     @Transactional
     public AdminUserResponse update(Long id, AdminUserRequest request) {
         User admin = requireAdmin();
-        if (request.role() == null && request.blocked() == null && !Boolean.TRUE.equals(request.disableTwoFactor())) throw new ApiException(400, "Nothing to change");
+        if (request.role() == null && request.blocked() == null && !Boolean.TRUE.equals(request.disableTwoFactor())
+                && !Boolean.TRUE.equals(request.markEmailVerified())) throw new ApiException(400, "Nothing to change");
         User user = users.findById(id).orElseThrow(() -> new ApiException(404, "User not found"));
         if (user.getId().equals(admin.getId())) throw new ApiException(409, "You cannot change your own account");
         if (request.role() != null && request.role() != user.getRole()) {
@@ -56,6 +57,7 @@ public class UserAdminService {
         }
         if (request.blocked() != null) user.setBlocked(request.blocked());
         if (Boolean.TRUE.equals(request.disableTwoFactor())) TwoFactorService.clear(user);
+        if (Boolean.TRUE.equals(request.markEmailVerified())) user.setEmailVerified(true);
         return ApiMapper.adminUser(users.saveAndFlush(user));
     }
 

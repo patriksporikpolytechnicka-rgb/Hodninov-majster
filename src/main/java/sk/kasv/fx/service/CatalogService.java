@@ -9,6 +9,7 @@ import sk.kasv.fx.entity.*;
 import sk.kasv.fx.exception.ApiException;
 import sk.kasv.fx.repository.*;
 import sk.kasv.fx.security.CurrentUser;
+import sk.kasv.fx.security.Verified;
 import java.util.List;
 import java.util.Locale;
 import static sk.kasv.fx.dto.ApiDtos.*;
@@ -63,7 +64,7 @@ public class CatalogService {
     public ProviderResponse myProfile() { return ApiMapper.provider(myProvider()); }
     @Transactional
     public ProviderResponse saveProfile(ProviderRequest request) {
-        User user = requireRole(Role.PROVIDER);
+        User user = Verified.require(requireRole(Role.PROVIDER));
         ProviderProfile profile = providers.findByUserId(user.getId()).orElseGet(ProviderProfile::new);
         profile.setUser(user); profile.setName(request.name().strip());
         profile.setDescription(request.description().strip()); profile.setLocation(request.location().strip());
@@ -91,6 +92,7 @@ public class CatalogService {
     }
     @Transactional
     public ServiceResponse createService(ServiceRequest request) {
+        Verified.require(current.require());
         Service service = new Service(); service.setProvider(myProvider());
         apply(service, request);
         return ApiMapper.service(services.saveAndFlush(service));

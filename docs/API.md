@@ -263,3 +263,20 @@ Prihlásenie so zapnutým 2FA:
 Vypnutie: POST /api/auth/2fa/disable `{"code":"123456"}` → 204 (vyžaduje platný kód).
 Stratený telefón: admin cez PATCH /api/admin/users/{id} `{"disableTwoFactor":true}`.
 UserResponse (/me, login) aj AdminUserResponse obsahujú twoFactorEnabled. Stĺpce pridá migrácia V5.
+
+## Overenie e-mailu
+
+- Registrácia pošle e-mail s odkazom `EMAIL_VERIFICATION_LINK + token` (platí 24 hodín, iba raz). Účet sa dá hneď používať,
+  ale kým nie je e-mail overený, zákazník nemôže objednávať a poskytovateľ nemôže vytvoriť profil ani pridať službu
+  (403 „Verify your e-mail address first“).
+- POST /api/auth/verify-email `{"token":"..."}` (verejné) → 204; neplatný, použitý alebo starý odkaz → 400.
+- POST /api/auth/verify-email/resend (prihlásený) → 202, nový odkaz (staré prestanú platiť); limit ako pri prihlásení.
+- UserResponse aj AdminUserResponse majú emailVerified. Admin môže e-mail potvrdiť ručne: PATCH /api/admin/users/{id} `{"markEmailVerified":true}`.
+- Účty, ktoré existovali pred touto zmenou (aj demo účty), sú považované za overené (migrácia V6).
+
+## E-maily – nastavenie
+
+SMTP server cez premenné SPRING_MAIL_HOST, SPRING_MAIL_PORT, SPRING_MAIL_USERNAME, SPRING_MAIL_PASSWORD
+(+ podľa servera SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true), odosielateľ MAIL_FROM.
+Odkazy: PASSWORD_RESET_LINK, EMAIL_VERIFICATION_LINK. Bez SMTP servera profily demo a local e-maily iba vypíšu do konzoly
+(app.mail.log-without-server=true). Chyba pri odoslaní e-mailu nikdy nezhodí požiadavku, iba sa zapíše do logu.

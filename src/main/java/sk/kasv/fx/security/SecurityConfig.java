@@ -86,7 +86,7 @@ public class SecurityConfig {
                                 "/sluzby/*", "/objednavky", "/profil", "/prihlasenie", "/registracia", "/api/info",
                                 "/objednavky/*", "/moje-sluzby", "/poskytovatelia/*", "/admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/auth/refresh", "/api/auth/logout",
-                                "/api/auth/password-reset/request", "/api/auth/password-reset/confirm").permitAll()
+                                "/api/auth/password-reset/request", "/api/auth/password-reset/confirm", "/api/auth/verify-email").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/me", "/api/providers/me", "/api/services/mine").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/categories", "/api/providers/*", "/api/services", "/api/services/*",
                                 "/api/providers/*/reviews", "/api/providers/*/rating").permitAll()

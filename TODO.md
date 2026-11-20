@@ -45,6 +45,8 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 
 ## Neskoršie časti MVP
 
+- [x] Overenie e-mailu pri registrácii (backend; chýba frontend stránka /overenie-emailu).
+
 - [ ] Chat zákazníka s poskytovateľom.
 - [ ] Hodnotenia po dokončenej zákazke. (backend hotový; chýba frontend)
 - [ ] Produkčné mesačné predplatné poskytovateľov (10 €), platobná brána a overené potvrdenia platieb. Bez provízií zo zákaziek.

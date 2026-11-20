@@ -25,8 +25,8 @@ public class DemoData implements CommandLineRunner {
     @Override @Transactional
     public void run(String... args) {
         if (users.existsByEmail("zakaznik@demo.sk")) return;
-        users.save(new User("zakaznik@demo.sk", passwords.encode("DemoHeslo123!"), Role.CUSTOMER));
-        users.save(new User("admin@demo.sk", passwords.encode("DemoHeslo123!"), Role.ADMIN));
+        users.save(verified(new User("zakaznik@demo.sk", passwords.encode("DemoHeslo123!"), Role.CUSTOMER)));
+        users.save(verified(new User("admin@demo.sk", passwords.encode("DemoHeslo123!"), Role.ADMIN)));
         Category home = category("Domácnosť"), garden = category("Záhrada"), it = category("IT pomoc"), moving = category("Sťahovanie");
         ProviderProfile peter = provider("majster@demo.sk", "Peter Novák", "Košice", "Pomôžem s montážou nábytku a drobnými opravami. Záleží mi na čistom výsledku aj poriadku po práci.");
         ProviderProfile lucia = provider("zahrada@demo.sk", "Lucia Zelená", "Prešov", "Postarám sa o trávnik, záhony aj sezónne práce vo vašej záhrade.");
@@ -38,11 +38,12 @@ public class DemoData implements CommandLineRunner {
         service(peter, moving, "Pomoc so sťahovaním", "Pomoc pri prenášaní krabíc a nábytku. Objednajte si čas, ktorý potrebujete, a do poznámky napíšte podrobnosti.", "20.00", PriceUnit.HOUR);
         service(lucia, garden, "Výsadba a úprava záhonov", "Príprava pôdy a výsadba rastlín. Materiál a konkrétny rozsah práce si dohodneme pred realizáciou.", "12.00", PriceUnit.SQUARE_METER);
     }
+    private static User verified(User user) { user.setEmailVerified(true); return user; }
     private Category category(String name) {
         Category c = new Category(); c.setName(name); return categories.save(c);
     }
     private ProviderProfile provider(String email, String name, String location, String description) {
-        User user = users.save(new User(email, passwords.encode("DemoHeslo123!"), Role.PROVIDER));
+        User user = users.save(verified(new User(email, passwords.encode("DemoHeslo123!"), Role.PROVIDER)));
         ProviderProfile profile = new ProviderProfile(user, name, description, location, "Demo kontakt", null, true);
         profile.startTrial(java.time.Instant.now());
         return providers.save(profile);

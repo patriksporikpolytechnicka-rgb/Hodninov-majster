@@ -21,8 +21,9 @@ class AuthServiceTest {
     JwtEncoder encoder = mock(JwtEncoder.class);
     RefreshTokenRepository refreshTokens = mock(RefreshTokenRepository.class);
     PasswordResetTokenRepository resetTokens = mock(PasswordResetTokenRepository.class);
-    PasswordResetMailer mailer = mock(PasswordResetMailer.class);
-    AuthService subject = new AuthService(users, passwords, encoder, Clock.systemUTC(), refreshTokens, resetTokens, mailer);
+    EmailVerificationTokenRepository verifyTokens = mock(EmailVerificationTokenRepository.class);
+    AuthMails mailer = mock(AuthMails.class);
+    AuthService subject = new AuthService(users, passwords, encoder, Clock.systemUTC(), refreshTokens, resetTokens, verifyTokens, mailer);
     User existing(String password) {
         User u = new User("test@example.invalid", passwords.encode(password), Role.CUSTOMER); u.setId(7L);
         return u;
@@ -44,6 +45,37 @@ class AuthServiceTest {
         assertThat(passwords.matches("long-password", saved.get().getPassword())).isTrue();
         assertThat(response.accessToken()).isEqualTo("signed-token");
         assertThat(response.user().role()).isEqualTo(Role.PROVIDER);
+    }
+    @Test void registrationSendsVerificationLinkAndStartsUnverified() {
+        when(users.saveAndFlush(any())).thenAnswer(i -> { User u = i.getArgument(0); u.setId(7L); return u; });
+        signs();
+        AtomicReference<EmailVerificationToken> saved = new AtomicReference<>();
+        when(verifyTokens.save(any())).thenAnswer(i -> { saved.set(i.getArgument(0)); return i.getArgument(0); });
+        var response = subject.register(new RegisterRequest("new@example.invalid", "long-password", Role.CUSTOMER));
+        assertThat(response.user().emailVerified()).isFalse();
+        var token = org.mockito.ArgumentCaptor.forClass(String.class);
+        verify(mailer).sendVerification(eq("new@example.invalid"), token.capture());
+        assertThat(saved.get().getTokenHash()).isEqualTo(Tokens.hash(token.getValue()));
+    }
+    @Test void verificationLinkWorksOnce() {
+        User u = existing("pw-123456789");
+        var stored = new EmailVerificationToken(u, Tokens.hash("v"), Instant.now(), Instant.now().plusSeconds(600));
+        when(verifyTokens.findByTokenHash(Tokens.hash("v"))).thenReturn(Optional.of(stored));
+        subject.verifyEmail(new VerifyEmailRequest("v"));
+        assertThat(u.isEmailVerified()).isTrue();
+        assertThatThrownBy(() -> subject.verifyEmail(new VerifyEmailRequest("v")))
+                .isInstanceOf(ApiException.class).hasMessageContaining("Invalid or expired");
+    }
+    @Test void expiredVerificationLinkIsRejected() {
+        User u = existing("pw-123456789");
+        var stored = new EmailVerificationToken(u, Tokens.hash("v"), Instant.now().minusSeconds(90000), Instant.now().minusSeconds(1));
+        when(verifyTokens.findByTokenHash(Tokens.hash("v"))).thenReturn(Optional.of(stored));
+        assertThatThrownBy(() -> subject.verifyEmail(new VerifyEmailRequest("v"))).isInstanceOf(ApiException.class);
+        assertThat(u.isEmailVerified()).isFalse();
+    }
+    @Test void resendIsRefusedForVerifiedEmail() {
+        User u = existing("pw-123456789"); u.setEmailVerified(true);
+        assertThatThrownBy(() -> subject.resendVerification(u)).isInstanceOf(ApiException.class).hasMessageContaining("already verified");
     }
     @Test void duplicateEmailIsRejected() {
         when(users.existsByEmail("test@example.invalid")).thenReturn(true);
@@ -107,7 +139,7 @@ class AuthServiceTest {
         when(resetTokens.save(any())).thenAnswer(i -> { saved.set(i.getArgument(0)); return i.getArgument(0); });
         subject.requestPasswordReset(new PasswordResetRequest("Test@example.invalid"));
         var token = org.mockito.ArgumentCaptor.forClass(String.class);
-        verify(mailer).send(eq("test@example.invalid"), token.capture());
+        verify(mailer).sendPasswordReset(eq("test@example.invalid"), token.capture());
         assertThat(saved.get().getTokenHash()).isEqualTo(Tokens.hash(token.getValue()));
     }
     @Test void passwordResetChangesPasswordOnceAndEndsSessions() {

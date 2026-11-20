@@ -61,6 +61,17 @@ public class AuthController {
     @PostMapping("/password-reset/confirm") @ResponseStatus(HttpStatus.NO_CONTENT)
     public void resetPassword(@Valid @RequestBody PasswordResetConfirm request) { auth.resetPassword(request); }
 
+    @PostMapping("/verify-email") @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void verifyEmail(@Valid @RequestBody VerifyEmailRequest request) { auth.verifyEmail(request); }
+    /** New verification link for the logged-in user; limited like login. */
+    @PostMapping("/verify-email/resend") @ResponseStatus(HttpStatus.ACCEPTED)
+    public void resendVerification(HttpServletRequest http) {
+        var user = current.require();
+        attempts.check("verify", user.getEmail(), http.getRemoteAddr());
+        attempts.failed("verify", user.getEmail(), http.getRemoteAddr());
+        auth.resendVerification(user);
+    }
+
     @GetMapping("/me")
     public UserResponse me() { return ApiMapper.user(current.require()); }
 }

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sk.kasv.fx.dto.ApiMapper;
 import sk.kasv.fx.entity.*;
 import sk.kasv.fx.exception.ApiException;
+import sk.kasv.fx.repository.EmailVerificationTokenRepository;
 import sk.kasv.fx.repository.PasswordResetTokenRepository;
 import sk.kasv.fx.repository.RefreshTokenRepository;
 import sk.kasv.fx.repository.UserRepository;
@@ -30,18 +31,21 @@ public class AuthService {
     static final long ACCESS_SECONDS = 900;
     static final Duration REFRESH_LIFETIME = Duration.ofDays(14);
     static final Duration RESET_LIFETIME = Duration.ofMinutes(30);
+    static final Duration VERIFY_LIFETIME = Duration.ofHours(24);
     private final UserRepository users;
     private final PasswordEncoder passwords;
     private final JwtEncoder tokens;
     private final Clock clock;
     private final RefreshTokenRepository refreshTokens;
     private final PasswordResetTokenRepository resetTokens;
-    private final PasswordResetMailer mailer;
+    private final EmailVerificationTokenRepository verifyTokens;
+    private final AuthMails mails;
     private final String dummyHash;
     public AuthService(UserRepository users, PasswordEncoder passwords, JwtEncoder tokens, Clock clock,
-                       RefreshTokenRepository refreshTokens, PasswordResetTokenRepository resetTokens, PasswordResetMailer mailer) {
+                       RefreshTokenRepository refreshTokens, PasswordResetTokenRepository resetTokens,
+                       EmailVerificationTokenRepository verifyTokens, AuthMails mails) {
         this.users = users; this.passwords = passwords; this.tokens = tokens; this.clock = clock;
-        this.refreshTokens = refreshTokens; this.resetTokens = resetTokens; this.mailer = mailer;
+        this.refreshTokens = refreshTokens; this.resetTokens = resetTokens; this.verifyTokens = verifyTokens; this.mails = mails;
         this.dummyHash = passwords.encode("not-a-real-account-password");
     }
     public AuthResponse register(RegisterRequest request) {
@@ -52,7 +56,32 @@ public class AuthService {
         if (users.existsByEmail(email)) throw new ApiException(409, "Email already registered");
         User user = new User(email, passwords.encode(request.password()), request.role());
         user.setCreatedAt(LocalDateTime.now(clock));
-        return token(users.saveAndFlush(user));
+        user = users.saveAndFlush(user);
+        sendVerification(user);
+        return token(user);
+    }
+
+    /** Confirms the e-mail with the token from the verification link. */
+    public void verifyEmail(VerifyEmailRequest request) {
+        Instant now = clock.instant();
+        EmailVerificationToken stored = verifyTokens.findByTokenHash(Tokens.hash(request.token()))
+                .filter(t -> t.getUsedAt() == null && now.isBefore(t.getExpiresAt()))
+                .orElseThrow(() -> new ApiException(400, "Invalid or expired verification link"));
+        stored.setUsedAt(now);
+        stored.getUser().setEmailVerified(true);
+        users.saveAndFlush(stored.getUser());
+    }
+    /** Sends a fresh verification link; older links stop working. */
+    public void resendVerification(User user) {
+        if (user.isEmailVerified()) throw new ApiException(409, "E-mail is already verified");
+        sendVerification(user);
+    }
+    private void sendVerification(User user) {
+        Instant now = clock.instant();
+        verifyTokens.invalidateAllForUser(user.getId(), now);
+        String token = Tokens.newToken();
+        verifyTokens.save(new EmailVerificationToken(user, Tokens.hash(token), now, now.plus(VERIFY_LIFETIME)));
+        mails.sendVerification(user.getEmail(), token);
     }
     public AuthResponse login(LoginRequest request) {
         validatePasswordLength(request.password());
@@ -106,7 +135,7 @@ public class AuthService {
         resetTokens.invalidateAllForUser(user.getId(), now);
         String token = Tokens.newToken();
         resetTokens.save(new PasswordResetToken(user, Tokens.hash(token), now, now.plus(RESET_LIFETIME)));
-        mailer.send(user.getEmail(), token);
+        mails.sendPasswordReset(user.getEmail(), token);
     }
     /** Sets the new password and logs the user out everywhere. */
     public void resetPassword(PasswordResetConfirm request) {

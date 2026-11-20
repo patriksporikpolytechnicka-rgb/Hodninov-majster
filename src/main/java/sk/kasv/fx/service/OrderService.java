@@ -9,6 +9,7 @@ import sk.kasv.fx.exception.ApiException;
 import sk.kasv.fx.repository.OrderRepository;
 import sk.kasv.fx.repository.ServiceRepository;
 import sk.kasv.fx.security.CurrentUser;
+import sk.kasv.fx.security.Verified;
 import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class OrderService {
     public OrderResponse create(OrderRequest request) {
         User customer = current.require();
         if (customer.getRole() != Role.CUSTOMER) throw new ApiException(403, "Only customers can place orders");
+        Verified.require(customer);
         if (!request.scheduledAt().isAfter(LocalDateTime.now(clock))) throw new ApiException(400, "scheduledAt must be in the future (Europe/Bratislava)");
         Service service = services.findById(request.serviceId()).orElseThrow(() -> new ApiException(404, "Service not found"));
         if (!service.isActive() || !service.getProvider().isAvailability() || service.getProvider().getUser().isBlocked()) throw new ApiException(409, "Service or provider is unavailable");

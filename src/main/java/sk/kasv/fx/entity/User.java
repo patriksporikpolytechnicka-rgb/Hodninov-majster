@@ -28,6 +28,10 @@ public class User {
     @Column(nullable = false)
     private boolean blocked;
 
+    /** New accounts must confirm their e-mail before ordering or offering services. */
+    @Column(nullable = false)
+    private boolean emailVerified;
+
     /** Raised on logout everywhere and password reset; older access tokens stop working. */
     @Column(nullable = false)
     private int tokenVersion;
@@ -108,6 +112,9 @@ public class User {
     public void setTokenVersion(int tokenVersion) {
         this.tokenVersion = tokenVersion;
     }
+
+    public boolean isEmailVerified() { return emailVerified; }
+    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
 
     public String getTotpSecret() { return totpSecret; }
     public void setTotpSecret(String totpSecret) { this.totpSecret = totpSecret; }

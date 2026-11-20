@@ -17,7 +17,8 @@ public final class ApiDtos {
             @NotBlank @Size(max = 72) String password, @Pattern(regexp = "\\d{6}") String code) {
         public LoginRequest(String email, String password) { this(email, password, null); }
     }
-    public record UserResponse(Long id, String email, Role role, boolean twoFactorEnabled) {}
+    public record UserResponse(Long id, String email, Role role, boolean twoFactorEnabled, boolean emailVerified) {}
+    public record VerifyEmailRequest(@NotBlank @Size(max = 200) String token) {}
     public record AuthResponse(String accessToken, String tokenType, long expiresIn, UserResponse user, String refreshToken) {}
     public record RefreshRequest(@NotBlank @Size(max = 200) String refreshToken) {}
     public record PasswordResetRequest(@NotBlank @Email @Size(max = 254) String email) {}
@@ -58,12 +59,16 @@ public final class ApiDtos {
     public record ReviewResponse(Long id, Long orderId, Long providerId, String serviceName,
             int rating, String comment, LocalDateTime createdAt) {}
     public record RatingResponse(Long providerId, Double average, long count) {}
-    /** disableTwoFactor: true turns off 2FA for a user who lost their phone. */
-    public record AdminUserRequest(Role role, Boolean blocked, Boolean disableTwoFactor) {
-        public AdminUserRequest(Role role, Boolean blocked) { this(role, blocked, null); }
+    /**
+     * disableTwoFactor: true turns off 2FA for a user who lost their phone.
+     * markEmailVerified: true confirms the e-mail by hand (e.g. no mail server yet).
+     */
+    public record AdminUserRequest(Role role, Boolean blocked, Boolean disableTwoFactor, Boolean markEmailVerified) {
+        public AdminUserRequest(Role role, Boolean blocked) { this(role, blocked, null, null); }
+        public AdminUserRequest(Role role, Boolean blocked, Boolean disableTwoFactor) { this(role, blocked, disableTwoFactor, null); }
     }
     public record AdminUserResponse(Long id, String email, Role role, boolean blocked, boolean twoFactorEnabled,
-            LocalDateTime createdAt) {}
+            boolean emailVerified, LocalDateTime createdAt) {}
     public record TwoFactorSetupResponse(String secret, String otpauthUri) {}
     public record TwoFactorCodeRequest(@NotBlank @Pattern(regexp = "\\d{6}") String code) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
