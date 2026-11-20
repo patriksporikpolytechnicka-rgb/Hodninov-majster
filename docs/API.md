@@ -355,3 +355,10 @@ Stĺpec users.totp_secret je šifrovaný (AES-256-GCM, formát `v1:...`). Kľú�
 (Base64 z 32 náhodných bajtov, napr. `openssl rand -base64 32`). Bez nej sa kľúč odvodí z JWT_SECRET – potom pri zmene
 JWT_SECRET prestanú fungovať 2FA kódy všetkých používateľov (admin im 2FA vypne cez disableTwoFactor). Preto v produkcii
 nastavte TOTP_ENCRYPTION_KEY a nemeňte ho. Staré nešifrované hodnoty sa dajú stále prečítať a zašifrujú sa pri ďalšej zmene.
+
+## Swagger UI
+
+Po spustení backendu: http://localhost:8080/swagger-ui.html – zoznam všetkých endpointov s možnosťou ich vyskúšať.
+Prihlásenie: zavolať POST /api/auth/login, skopírovať accessToken a vložiť ho do „Authorize“ (bez slova Bearer).
+Strojovo čitateľný popis: /v3/api-docs. Je vždy aktuálny, preto docs/openapi.json a docs/api-types.ts už netreba udržiavať ručne.
+Na verejnom serveri sa dá vypnúť premennými SPRINGDOC_SWAGGER_UI_ENABLED=false a SPRINGDOC_API_DOCS_ENABLED=false.

@@ -84,6 +84,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .requestMatchers(HttpMethod.GET, "/", "/index.html", "/*.js", "/*.css", "/favicon.svg", "/assets/**",
                                 "/sluzby/*", "/objednavky", "/profil", "/prihlasenie", "/registracia", "/api/info",
+                                "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**",
                                 "/objednavky/*", "/moje-sluzby", "/poskytovatelia/*", "/admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/auth/refresh", "/api/auth/logout",
                                 "/api/auth/password-reset/request", "/api/auth/password-reset/confirm", "/api/auth/verify-email").permitAll()
