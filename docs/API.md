@@ -280,3 +280,11 @@ SMTP server cez premenné SPRING_MAIL_HOST, SPRING_MAIL_PORT, SPRING_MAIL_USERNA
 (+ podľa servera SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true), odosielateľ MAIL_FROM.
 Odkazy: PASSWORD_RESET_LINK, EMAIL_VERIFICATION_LINK. Bez SMTP servera profily demo a local e-maily iba vypíšu do konzoly
 (app.mail.log-without-server=true). Chyba pri odoslaní e-mailu nikdy nezhodí požiadavku, iba sa zapíše do logu.
+
+## E-mailové upozornenia k objednávkam
+
+Posielajú sa automaticky po uložení zmeny (na pozadí, požiadavka na ne nečaká):
+- nová objednávka → majster (termín, adresa, cena, poznámka),
+- prijatá, odmietnutá, začatá, dokončená → zákazník,
+- zrušená → druhá strana (zrušil zákazník → majster, zrušil majster → zákazník).
+Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://localhost:4200).

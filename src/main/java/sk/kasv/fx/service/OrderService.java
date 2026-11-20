@@ -1,11 +1,13 @@
 package sk.kasv.fx.service;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import sk.kasv.fx.dto.ApiMapper;
 import sk.kasv.fx.entity.*;
 import sk.kasv.fx.exception.ApiException;
+import sk.kasv.fx.notification.OrderEvent;
 import sk.kasv.fx.repository.OrderRepository;
 import sk.kasv.fx.repository.ServiceRepository;
 import sk.kasv.fx.security.CurrentUser;
@@ -22,8 +24,10 @@ public class OrderService {
     private final ServiceRepository services;
     private final CurrentUser current;
     private final Clock clock;
-    public OrderService(OrderRepository orders, ServiceRepository services, CurrentUser current, Clock clock) {
-        this.orders = orders; this.services = services; this.current = current; this.clock = clock;
+    private final ApplicationEventPublisher events;
+    public OrderService(OrderRepository orders, ServiceRepository services, CurrentUser current, Clock clock,
+                        ApplicationEventPublisher events) {
+        this.orders = orders; this.services = services; this.current = current; this.clock = clock; this.events = events;
     }
     @Transactional
     public OrderResponse create(OrderRequest request) {
@@ -43,7 +47,9 @@ public class OrderService {
         order.setTotalPrice(service.getPrice().multiply(request.quantity()).setScale(2, RoundingMode.HALF_UP));
         order.setScheduledAt(request.scheduledAt()); order.setStatus(OrderStatus.PENDING);
         order.setAddress(request.address().strip()); order.setNote(request.note()); order.setCreatedAt(LocalDateTime.now(clock));
-        return ApiMapper.order(orders.saveAndFlush(order));
+        order = orders.saveAndFlush(order);
+        events.publishEvent(OrderEvent.of(order, null));
+        return ApiMapper.order(order);
     }
     public PageResponse<OrderResponse> mine(int page, int size) {
         User user = current.require();
@@ -77,7 +83,9 @@ public class OrderService {
         };
         if (!allowed) throw new ApiException(409, "Status transition not allowed");
         order.setStatus(target);
-        return ApiMapper.order(orders.saveAndFlush(order));
+        order = orders.saveAndFlush(order);
+        events.publishEvent(OrderEvent.of(order, provider ? Role.PROVIDER : Role.CUSTOMER));
+        return ApiMapper.order(order);
     }
     private Order find(Long id) { return orders.findById(id).orElseThrow(() -> new ApiException(404, "Order not found")); }
     private void checkParticipant(Order order, User user) {

@@ -18,7 +18,8 @@ class OrderServiceTest {
     ServiceRepository services = mock(ServiceRepository.class);
     CurrentUser current = mock(CurrentUser.class);
     Clock clock = Clock.fixed(Instant.parse("2026-09-26T10:00:00Z"), ZoneId.of("Europe/Bratislava"));
-    OrderService subject = new OrderService(orders, services, current, clock);
+    org.springframework.context.ApplicationEventPublisher events = mock(org.springframework.context.ApplicationEventPublisher.class);
+    OrderService subject = new OrderService(orders, services, current, clock, events);
     User customer = new User("customer@example.invalid", "hash", Role.CUSTOMER);
     User providerUser = new User("provider@example.invalid", "hash", Role.PROVIDER);
     ProviderProfile provider = new ProviderProfile();
@@ -48,7 +49,7 @@ class OrderServiceTest {
     }
     @Test void expiredSubscriptionBlocksNewOrdersAndAcceptanceButAllowsCompletion() {
         Clock expiredClock = Clock.offset(clock, Duration.ofDays(30));
-        OrderService expired = new OrderService(orders, services, current, expiredClock);
+        OrderService expired = new OrderService(orders, services, current, expiredClock, events);
         var future = new OrderRequest(4L, LocalDateTime.now(expiredClock).plusDays(1), BigDecimal.ONE, "Address", null);
         assertThatThrownBy(() -> expired.create(future)).isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
         when(current.require()).thenReturn(providerUser);
@@ -56,6 +57,19 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
         order.setStatus(OrderStatus.IN_PROGRESS);
         assertThat(expired.changeStatus(5L, new StatusRequest(OrderStatus.COMPLETED)).status()).isEqualTo(OrderStatus.COMPLETED);
+    }
+    @Test void newOrderAndStatusChangesAreAnnounced() {
+        provider.setUser(providerUser);
+        subject.create(request("1"));
+        var event = org.mockito.ArgumentCaptor.forClass(sk.kasv.fx.notification.OrderEvent.class);
+        verify(events).publishEvent(event.capture());
+        assertThat(event.getValue().changedBy()).isNull();
+        assertThat(event.getValue().providerEmail()).isEqualTo("provider@example.invalid");
+        when(current.require()).thenReturn(providerUser);
+        subject.changeStatus(5L, new StatusRequest(OrderStatus.ACCEPTED));
+        verify(events, times(2)).publishEvent(event.capture());
+        assertThat(event.getValue().status()).isEqualTo(OrderStatus.ACCEPTED);
+        assertThat(event.getValue().changedBy()).isEqualTo(Role.PROVIDER);
     }
     @Test void unverifiedCustomerCannotOrder() {
         customer.setEmailVerified(false);

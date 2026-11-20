@@ -45,6 +45,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 
 ## Neskoršie časti MVP
 
+- [x] E-mailové upozornenia k objednávkam (backend).
 - [x] Overenie e-mailu pri registrácii (backend; chýba frontend stránka /overenie-emailu).
 
 - [ ] Chat zákazníka s poskytovateľom.
