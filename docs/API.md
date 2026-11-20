@@ -329,3 +329,11 @@ GET /api/providers/me/stats (iba PROVIDER) →
 `{"ordersTotal":4,"ordersByStatus":{"PENDING":1,"ACCEPTED":0,...},"upcomingOrders":0,"completedThisMonth":2,"earningsThisMonth":80.00,"completedTotal":3,"earningsTotal":120.50,"rating":4.3,"reviewCount":4}`
 - Mesiac sa určuje podľa termínu objednávky (Europe/Bratislava). Zárobok = súčet cien DOKONČENÝCH objednávok (bez provízie).
 - upcomingOrders = prijaté alebo prebiehajúce objednávky s termínom od teraz.
+
+## Audit log (iba ADMIN)
+
+GET /api/admin/audit?action=USER_BLOCKED&actorId=1&page=0&size=50 → PageResponse, najnovšie prvé:
+`{"id":1,"actorId":1,"actorEmail":"admin@demo.sk","action":"USER_BLOCKED","targetType":"USER","targetId":2,"details":"...","createdAt":"..."}`
+Zaznamenáva sa: USER_BLOCKED, USER_UNBLOCKED, USER_ROLE_CHANGED, USER_2FA_RESET, USER_EMAIL_VERIFIED, CATEGORY_CREATED,
+CATEGORY_RENAMED, CATEGORY_DELETED, SERVICE_DELETED, PASSWORD_RESET, 2FA_ENABLED, 2FA_DISABLED, TOKEN_REUSE_DETECTED,
+ACCOUNT_DELETED. Záznam vznikne v tej istej transakcii ako akcia (ak akcia zlyhá, záznam nevznikne). Záznamy sa nemažú.

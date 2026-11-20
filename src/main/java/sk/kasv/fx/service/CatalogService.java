@@ -22,39 +22,45 @@ public class CatalogService {
     private final ProviderProfileRepository providers;
     private final OrderRepository orders;
     private final CurrentUser current;
+    private final AuditService audit;
     @org.springframework.beans.factory.annotation.Autowired
     private java.time.Clock clock = java.time.Clock.systemUTC();
     public CatalogService(CategoryRepository categories, ServiceRepository services,
-                          ProviderProfileRepository providers, OrderRepository orders, CurrentUser current) {
-        this.categories = categories; this.services = services; this.providers = providers; this.orders = orders; this.current = current;
+                          ProviderProfileRepository providers, OrderRepository orders, CurrentUser current, AuditService audit) {
+        this.categories = categories; this.services = services; this.providers = providers; this.orders = orders;
+        this.current = current; this.audit = audit;
     }
     public List<CategoryResponse> categories() {
         return categories.findAll(Sort.by("name")).stream().map(ApiMapper::category).toList();
     }
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
-        requireRole(Role.ADMIN);
+        User admin = requireRole(Role.ADMIN);
         String name = request.name().strip();
         if (categories.existsByNameIgnoreCase(name)) throw new ApiException(409, "Category already exists");
         Category category = new Category(); category.setName(name);
-        return ApiMapper.category(categories.saveAndFlush(category));
+        category = categories.saveAndFlush(category);
+        audit.record(admin, AuditService.CATEGORY_CREATED, "CATEGORY", category.getId(), name);
+        return ApiMapper.category(category);
     }
     @Transactional
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
-        requireRole(Role.ADMIN);
+        User admin = requireRole(Role.ADMIN);
         Category category = categories.findById(id).orElseThrow(() -> new ApiException(404, "Category not found"));
         String name = request.name().strip();
         if (categories.existsByNameIgnoreCaseAndIdNot(name, id)) throw new ApiException(409, "Category already exists");
+        audit.record(admin, AuditService.CATEGORY_RENAMED, "CATEGORY", id, category.getName() + " -> " + name);
         category.setName(name);
         return ApiMapper.category(categories.saveAndFlush(category));
     }
     /** A category can be deleted only when no service (not even a deleted one) uses it. */
     @Transactional
     public void deleteCategory(Long id) {
-        requireRole(Role.ADMIN);
+        User admin = requireRole(Role.ADMIN);
         Category category = categories.findById(id).orElseThrow(() -> new ApiException(404, "Category not found"));
         if (services.existsByCategoryId(id)) throw new ApiException(409, "Category is used by services; move them first");
         categories.delete(category);
+        audit.record(admin, AuditService.CATEGORY_DELETED, "CATEGORY", id, category.getName());
     }
     public ProviderResponse provider(Long id) {
         ProviderProfile profile = findProvider(id);
@@ -133,12 +139,15 @@ public class CatalogService {
         if (!owner && user.getRole() != Role.ADMIN) throw new ApiException(403, "Service belongs to another provider");
         if (orders.existsByServiceIdAndStatusIn(id, List.of(OrderStatus.PENDING, OrderStatus.ACCEPTED, OrderStatus.IN_PROGRESS)))
             throw new ApiException(409, "Service has open orders; finish or cancel them first");
-        if (orders.existsByServiceId(id)) {
+        boolean keep = orders.existsByServiceId(id);
+        if (keep) {
             service.setDeleted(true); service.setActive(false);
             services.saveAndFlush(service);
         } else {
             services.delete(service);
         }
+        audit.record(user, AuditService.SERVICE_DELETED, "SERVICE", id,
+                service.getName() + (keep ? " (kept for order history)" : "") + (owner ? "" : " by admin"));
     }
     private void apply(Service service, ServiceRequest request) {
         service.setCategory(categories.findById(request.categoryId()).orElseThrow(() -> new ApiException(404, "Category not found")));

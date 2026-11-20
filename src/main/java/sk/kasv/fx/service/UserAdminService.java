@@ -23,8 +23,10 @@ public class UserAdminService {
     private final ProviderProfileRepository providers;
     private final OrderRepository orders;
     private final CurrentUser current;
-    public UserAdminService(UserRepository users, ProviderProfileRepository providers, OrderRepository orders, CurrentUser current) {
-        this.users = users; this.providers = providers; this.orders = orders; this.current = current;
+    private final AuditService audit;
+    public UserAdminService(UserRepository users, ProviderProfileRepository providers, OrderRepository orders, CurrentUser current,
+                            AuditService audit) {
+        this.users = users; this.providers = providers; this.orders = orders; this.current = current; this.audit = audit;
     }
 
     public PageResponse<AdminUserResponse> list(String q, Role role, Boolean blocked, int page, int size) {
@@ -53,11 +55,21 @@ public class UserAdminService {
         if (request.role() != null && request.role() != user.getRole()) {
             if (providers.findByUserId(id).isPresent() || orders.existsByCustomerId(id))
                 throw new ApiException(409, "Account has history; block it instead of changing its role");
+            audit.record(admin, AuditService.USER_ROLE_CHANGED, "USER", id, user.getRole() + " -> " + request.role());
             user.setRole(request.role());
         }
-        if (request.blocked() != null) user.setBlocked(request.blocked());
-        if (Boolean.TRUE.equals(request.disableTwoFactor())) TwoFactorService.clear(user);
-        if (Boolean.TRUE.equals(request.markEmailVerified())) user.setEmailVerified(true);
+        if (request.blocked() != null && request.blocked() != user.isBlocked()) {
+            user.setBlocked(request.blocked());
+            audit.record(admin, request.blocked() ? AuditService.USER_BLOCKED : AuditService.USER_UNBLOCKED, "USER", id, user.getEmail());
+        }
+        if (Boolean.TRUE.equals(request.disableTwoFactor()) && user.isTotpEnabled()) {
+            TwoFactorService.clear(user);
+            audit.record(admin, AuditService.USER_2FA_RESET, "USER", id, user.getEmail());
+        }
+        if (Boolean.TRUE.equals(request.markEmailVerified()) && !user.isEmailVerified()) {
+            user.setEmailVerified(true);
+            audit.record(admin, AuditService.USER_EMAIL_VERIFIED, "USER", id, user.getEmail());
+        }
         return ApiMapper.adminUser(users.saveAndFlush(user));
     }
 

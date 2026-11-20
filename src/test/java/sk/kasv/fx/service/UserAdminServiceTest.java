@@ -16,7 +16,8 @@ class UserAdminServiceTest {
     ProviderProfileRepository providers = mock(ProviderProfileRepository.class);
     OrderRepository orders = mock(OrderRepository.class);
     CurrentUser current = mock(CurrentUser.class);
-    UserAdminService subject = new UserAdminService(users, providers, orders, current);
+    AuditService audit = mock(AuditService.class);
+    UserAdminService subject = new UserAdminService(users, providers, orders, current, audit);
     User admin = new User("admin@example.invalid", "hash", Role.ADMIN);
     User customer = new User("customer@example.invalid", "hash", Role.CUSTOMER);
 
@@ -31,6 +32,7 @@ class UserAdminServiceTest {
     @Test void adminBlocksAndUnblocksUser() {
         assertThat(subject.update(2L, new AdminUserRequest(null, true)).blocked()).isTrue();
         assertThat(customer.isBlocked()).isTrue();
+        verify(audit).record(admin, AuditService.USER_BLOCKED, "USER", 2L, "customer@example.invalid");
         assertThat(subject.update(2L, new AdminUserRequest(null, false)).blocked()).isFalse();
     }
     @Test void roleChangesOnlyWithoutHistory() {

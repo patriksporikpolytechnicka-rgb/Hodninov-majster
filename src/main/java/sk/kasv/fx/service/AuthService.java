@@ -40,12 +40,14 @@ public class AuthService {
     private final PasswordResetTokenRepository resetTokens;
     private final EmailVerificationTokenRepository verifyTokens;
     private final AuthMails mails;
+    private final AuditService audit;
     private final String dummyHash;
     public AuthService(UserRepository users, PasswordEncoder passwords, JwtEncoder tokens, Clock clock,
                        RefreshTokenRepository refreshTokens, PasswordResetTokenRepository resetTokens,
-                       EmailVerificationTokenRepository verifyTokens, AuthMails mails) {
+                       EmailVerificationTokenRepository verifyTokens, AuthMails mails, AuditService audit) {
         this.users = users; this.passwords = passwords; this.tokens = tokens; this.clock = clock;
         this.refreshTokens = refreshTokens; this.resetTokens = resetTokens; this.verifyTokens = verifyTokens; this.mails = mails;
+        this.audit = audit;
         this.dummyHash = passwords.encode("not-a-real-account-password");
     }
     public AuthResponse register(RegisterRequest request) {
@@ -112,6 +114,7 @@ public class AuthService {
         User user = stored.getUser();
         if (stored.getRevokedAt() != null) {
             endAllSessions(user, now);
+            audit.record(user, AuditService.TOKEN_REUSE_DETECTED, "USER", user.getId(), "All sessions ended");
             throw new ApiException(401, "Invalid refresh token");
         }
         if (!now.isBefore(stored.getExpiresAt())) throw new ApiException(401, "Refresh token expired");
@@ -148,6 +151,7 @@ public class AuthService {
         User user = stored.getUser();
         user.setPassword(passwords.encode(request.newPassword()));
         endAllSessions(user, now);
+        audit.record(user, AuditService.PASSWORD_RESET, "USER", user.getId(), null);
     }
 
     private void endAllSessions(User user, Instant now) {

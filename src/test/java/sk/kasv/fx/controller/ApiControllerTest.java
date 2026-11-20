@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {AuthController.class, CategoryController.class, ProviderController.class,
-        ServiceController.class, OrderController.class, ReviewController.class, AdminController.class}, properties = {
+        ServiceController.class, OrderController.class, ReviewController.class, AdminController.class, AuditController.class}, properties = {
         "app.jwt.secret=test-only-key-at-least-thirty-two-bytes-long",
         "app.cors.allowed-origin=http://localhost:4200",
         "spring.jackson.deserialization.fail-on-unknown-properties=true"})
@@ -36,6 +36,7 @@ class ApiControllerTest {
     @MockitoBean UserAdminService userAdmin;
     @MockitoBean LoginAttemptService attempts;
     @MockitoBean ProviderStatsService providerStats;
+    @MockitoBean AuditService audit;
     @MockitoBean CurrentUser current;
 
     @Test void categoriesArePublic() throws Exception {

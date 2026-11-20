@@ -89,5 +89,7 @@ public final class ApiDtos {
     public record ProviderStatsResponse(long ordersTotal, Map<OrderStatus, Long> ordersByStatus, long upcomingOrders,
             long completedThisMonth, BigDecimal earningsThisMonth, long completedTotal, BigDecimal earningsTotal,
             Double rating, int reviewCount) {}
+    public record AuditResponse(Long id, Long actorId, String actorEmail, String action, String targetType, Long targetId,
+            String details, java.time.Instant createdAt) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

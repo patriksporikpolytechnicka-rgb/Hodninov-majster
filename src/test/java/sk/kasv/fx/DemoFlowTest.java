@@ -87,6 +87,13 @@ class DemoFlowTest {
         mvc.perform(get(photoUrl.substring(0, photoUrl.indexOf('?')))).andExpect(status().isOk())
                 .andExpect(content().contentType("image/png")).andExpect(content().bytes(png))
                 .andExpect(header().string("Cache-Control", org.hamcrest.Matchers.containsString("max-age=86400")));
+        String adminToken = login("admin@demo.sk");
+        mvc.perform(patch("/api/admin/users/" + order.get("customerId").asLong()).header("Authorization", "Bearer " + adminToken)
+                .contentType("application/json").content("{\"blocked\":true}")).andExpect(status().isOk());
+        mvc.perform(get("/api/admin/audit").param("action", "USER_BLOCKED").header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.content[0].actorEmail").value("admin@demo.sk"))
+                .andExpect(jsonPath("$.content[0].targetId").value(order.get("customerId").asLong()));
+        mvc.perform(get("/api/auth/me").header("Authorization", "Bearer " + customerToken)).andExpect(status().isForbidden());
         JsonNode filtered = body(mvc.perform(get("/api/services").param("q", "Nastavenie").param("location", "Košice"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);

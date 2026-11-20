@@ -13,7 +13,7 @@ import static sk.kasv.fx.dto.ApiDtos.*;
 class TwoFactorServiceTest {
     UserRepository users = mock(UserRepository.class);
     Clock clock = Clock.fixed(Instant.parse("2026-11-20T10:00:00Z"), ZoneOffset.UTC);
-    TwoFactorService subject = new TwoFactorService(users, clock);
+    TwoFactorService subject = new TwoFactorService(users, clock, mock(AuditService.class));
     User user = new User("a@example.invalid", "hash", Role.CUSTOMER);
 
     /** The code an authenticator app would show right now. */

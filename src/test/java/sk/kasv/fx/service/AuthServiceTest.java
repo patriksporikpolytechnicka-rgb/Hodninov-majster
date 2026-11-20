@@ -23,7 +23,8 @@ class AuthServiceTest {
     PasswordResetTokenRepository resetTokens = mock(PasswordResetTokenRepository.class);
     EmailVerificationTokenRepository verifyTokens = mock(EmailVerificationTokenRepository.class);
     AuthMails mailer = mock(AuthMails.class);
-    AuthService subject = new AuthService(users, passwords, encoder, Clock.systemUTC(), refreshTokens, resetTokens, verifyTokens, mailer);
+    AuditService audit = mock(AuditService.class);
+    AuthService subject = new AuthService(users, passwords, encoder, Clock.systemUTC(), refreshTokens, resetTokens, verifyTokens, mailer, audit);
     User existing(String password) {
         User u = new User("test@example.invalid", passwords.encode(password), Role.CUSTOMER); u.setId(7L);
         return u;

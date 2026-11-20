@@ -17,7 +17,8 @@ class CatalogServiceTest {
     ProviderProfileRepository providers = mock(ProviderProfileRepository.class);
     OrderRepository orders = mock(OrderRepository.class);
     CurrentUser current = mock(CurrentUser.class);
-    CatalogService subject = new CatalogService(categories, services, providers, orders, current);
+    AuditService audit = mock(AuditService.class);
+    CatalogService subject = new CatalogService(categories, services, providers, orders, current, audit);
     @Test void providerCannotModifyAnotherProvidersService() {
         User actor = new User("a@example.invalid", "hash", Role.PROVIDER); actor.setId(1L);
         User owner = new User("b@example.invalid", "hash", Role.PROVIDER); owner.setId(2L);
@@ -45,6 +46,7 @@ class CatalogServiceTest {
         when(current.require()).thenReturn(owner);
         subject.deleteService(3L);
         verify(services).delete(service);
+        verify(audit).record(eq(owner), eq(AuditService.SERVICE_DELETED), eq("SERVICE"), eq(3L), any());
     }
     @Test void serviceWithPastOrdersIsOnlyMarkedDeleted() {
         User owner = new User("b@example.invalid", "hash", Role.PROVIDER); owner.setId(2L);

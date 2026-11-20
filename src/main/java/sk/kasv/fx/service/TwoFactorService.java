@@ -15,7 +15,8 @@ public class TwoFactorService {
     static final String ISSUER = "Hodinový majster";
     private final UserRepository users;
     private final Clock clock;
-    public TwoFactorService(UserRepository users, Clock clock) { this.users = users; this.clock = clock; }
+    private final AuditService audit;
+    public TwoFactorService(UserRepository users, Clock clock, AuditService audit) { this.users = users; this.clock = clock; this.audit = audit; }
 
     /** Step 1: a new secret to scan. 2FA is not active until enable() confirms a code. */
     public TwoFactorSetupResponse setup(User user) {
@@ -32,6 +33,7 @@ public class TwoFactorService {
         user.setTotpLastStep(checkCode(user, request.code()));
         user.setTotpEnabled(true);
         users.saveAndFlush(user);
+        audit.record(user, AuditService.TWO_FACTOR_ENABLED, "USER", user.getId(), null);
     }
     /** Needs a current code, so a stolen session alone cannot turn 2FA off. */
     public void disable(User user, TwoFactorCodeRequest request) {
@@ -39,6 +41,7 @@ public class TwoFactorService {
         checkCode(user, request.code());
         clear(user);
         users.saveAndFlush(user);
+        audit.record(user, AuditService.TWO_FACTOR_DISABLED, "USER", user.getId(), null);
     }
     static void clear(User user) {
         user.setTotpEnabled(false); user.setTotpSecret(null); user.setTotpLastStep(0);
