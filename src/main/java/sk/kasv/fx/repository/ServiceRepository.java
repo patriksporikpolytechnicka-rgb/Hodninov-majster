@@ -9,4 +9,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long>, JpaSpec
     Page<Service> findByProviderId(Long providerId, Pageable pageable);
     Page<Service> findByProviderIdAndDeletedFalse(Long providerId, Pageable pageable);
     boolean existsByCategoryId(Long categoryId);
+    java.util.List<Service> findAllByProviderIdAndDeletedFalseOrderByIdAsc(Long providerId);
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.data.jpa.repository.Query("update Service s set s.deleted = true, s.active = false where s.provider.id = :providerId")
+    int deleteAllForProvider(@org.springframework.data.repository.query.Param("providerId") Long providerId);
 }

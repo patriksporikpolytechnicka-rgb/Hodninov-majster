@@ -91,5 +91,10 @@ public final class ApiDtos {
             Double rating, int reviewCount) {}
     public record AuditResponse(Long id, Long actorId, String actorEmail, String action, String targetType, Long targetId,
             String details, java.time.Instant createdAt) {}
+    /** code: authenticator code, required only when two-factor login is on. */
+    public record DeleteAccountRequest(@NotBlank @Size(max = 72) String password, @Pattern(regexp = "\\d{6}") String code) {}
+    public record AccountExport(java.time.Instant exportedAt, AdminUserResponse account, ProviderResponse providerProfile,
+            List<ServiceResponse> services, List<OrderResponse> ordersAsCustomer, List<OrderResponse> ordersAsProvider,
+            List<ReviewResponse> reviewsWritten, List<MessageResponse> messagesSent, AvailabilityResponse availability) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

@@ -13,6 +13,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByOrderId(Long orderId);
     Page<Review> findByProviderId(Long providerId, Pageable pageable);
     long countByProviderId(Long providerId);
+    java.util.List<Review> findAllByCustomerIdOrderByIdAsc(Long customerId);
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("update Review r set r.comment = null where r.customer.id = :customerId")
+    int removeComments(@Param("customerId") Long customerId);
     @Query("select avg(r.rating) from Review r where r.provider.id = :providerId")
     Double averageRating(@Param("providerId") Long providerId);
 }

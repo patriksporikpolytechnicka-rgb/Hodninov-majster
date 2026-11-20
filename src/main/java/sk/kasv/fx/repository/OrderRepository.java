@@ -13,6 +13,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsByServiceId(Long serviceId);
     boolean existsByServiceIdAndStatusIn(Long serviceId, Collection<OrderStatus> statuses);
     boolean existsByCustomerId(Long customerId);
+    boolean existsByCustomerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
+    boolean existsByProviderUserIdAndStatusIn(Long userId, Collection<OrderStatus> statuses);
+    List<Order> findAllByCustomerIdOrderByIdAsc(Long customerId);
+    List<Order> findAllByProviderUserIdOrderByIdAsc(Long userId);
+    /** Account deletion: the customer's address and note are personal data. */
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.data.jpa.repository.Query("update Order o set o.address = :address, o.note = null where o.customer.id = :customerId")
+    int anonymizeCustomer(@org.springframework.data.repository.query.Param("customerId") Long customerId, @org.springframework.data.repository.query.Param("address") String address);
 
     @org.springframework.data.jpa.repository.Query("select o.status, count(o) from Order o where o.provider.id = :providerId group by o.status")
     List<Object[]> countByStatus(@org.springframework.data.repository.query.Param("providerId") Long providerId);

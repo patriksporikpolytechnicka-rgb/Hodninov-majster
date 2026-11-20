@@ -337,3 +337,14 @@ GET /api/admin/audit?action=USER_BLOCKED&actorId=1&page=0&size=50 → PageRespon
 Zaznamenáva sa: USER_BLOCKED, USER_UNBLOCKED, USER_ROLE_CHANGED, USER_2FA_RESET, USER_EMAIL_VERIFIED, CATEGORY_CREATED,
 CATEGORY_RENAMED, CATEGORY_DELETED, SERVICE_DELETED, PASSWORD_RESET, 2FA_ENABLED, 2FA_DISABLED, TOKEN_REUSE_DETECTED,
 ACCOUNT_DELETED. Záznam vznikne v tej istej transakcii ako akcia (ak akcia zlyhá, záznam nevznikne). Záznamy sa nemažú.
+
+## GDPR – export údajov a zrušenie účtu
+
+- GET /api/account/export (prihlásený) → JSON na stiahnutie (Content-Disposition: attachment): účet, profil majstra, služby,
+  objednávky ako zákazník aj ako majster, napísané hodnotenia a správy, dostupnosť. Heslá, 2FA tajomstvá ani tokeny v ňom nie sú.
+- POST /api/account/delete `{"password":"...","code":"123456"}` → 204 (code iba pri zapnutom 2FA).
+  - Zlé heslo alebo kód → 400; otvorené objednávky (čakajúce, prijaté, prebiehajúce) → 409; admin → 409.
+  - Účet sa anonymizuje: e-mail → deleted-{id}@deleted.invalid, heslo sa zmení, účet sa zablokuje, odhlási zo všetkých zariadení.
+    Profil majstra sa vymaže (meno „Zmazaný účet“), služby, fotka, pracovný čas a voľno zmiznú. V objednávkach zákazníka
+    sa vymaže adresa a poznámka, v hodnoteniach komentár (hviezdičky ostanú), texty správ sa nahradia „[správa zmazaná]“.
+  - Pôvodný e-mail sa dá potom znova použiť na novú registráciu. Do audit logu sa zapíše ACCOUNT_DELETED (bez e-mailu).

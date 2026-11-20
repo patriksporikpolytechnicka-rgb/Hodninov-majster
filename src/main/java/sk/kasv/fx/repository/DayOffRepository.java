@@ -14,4 +14,7 @@ public interface DayOffRepository extends JpaRepository<DayOff, Long> {
     @Modifying
     @Query("delete from DayOff d where d.provider.id = :providerId and d.day = :day")
     int deleteDay(@Param("providerId") Long providerId, @Param("day") LocalDate day);
+    @Modifying
+    @Query("delete from DayOff d where d.provider.id = :providerId")
+    void deleteAllForProvider(@Param("providerId") Long providerId);
 }

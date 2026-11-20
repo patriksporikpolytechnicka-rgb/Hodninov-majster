@@ -87,6 +87,15 @@ class DemoFlowTest {
         mvc.perform(get(photoUrl.substring(0, photoUrl.indexOf('?')))).andExpect(status().isOk())
                 .andExpect(content().contentType("image/png")).andExpect(content().bytes(png))
                 .andExpect(header().string("Cache-Control", org.hamcrest.Matchers.containsString("max-age=86400")));
+        JsonNode export = body(mvc.perform(get("/api/account/export").header("Authorization", "Bearer " + customerToken))
+                .andExpect(status().isOk()).andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.containsString("attachment")))
+                .andReturn().getResponse().getContentAsString());
+        assertThat(export.get("account").get("email").asText()).isEqualTo("zakaznik@demo.sk");
+        assertThat(export.get("ordersAsCustomer").size()).isEqualTo(1);
+        assertThat(export.get("reviewsWritten").get(0).get("comment").asText()).isEqualTo("Výborne");
+        assertThat(export.toString()).doesNotContain("password").doesNotContain("totpSecret");
+        mvc.perform(post("/api/account/delete").header("Authorization", "Bearer " + customerToken).contentType("application/json")
+                .content("{\"password\":\"wrong-password\"}")).andExpect(status().isBadRequest());
         String adminToken = login("admin@demo.sk");
         mvc.perform(patch("/api/admin/users/" + order.get("customerId").asLong()).header("Authorization", "Bearer " + adminToken)
                 .contentType("application/json").content("{\"blocked\":true}")).andExpect(status().isOk());
@@ -97,6 +106,17 @@ class DemoFlowTest {
         JsonNode filtered = body(mvc.perform(get("/api/services").param("q", "Nastavenie").param("location", "Košice"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);
+    }
+    @Test void handymanCanDeleteAccount() throws Exception {
+        String token = login("zahrada@demo.sk");
+        mvc.perform(post("/api/account/delete").header("Authorization", "Bearer " + token).contentType("application/json")
+                .content("{\"password\":\"DemoHeslo123!\"}")).andExpect(status().isNoContent());
+        mvc.perform(get("/api/auth/me").header("Authorization", "Bearer " + token)).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/auth/login").contentType("application/json")
+                .content("{\"email\":\"zahrada@demo.sk\",\"password\":\"DemoHeslo123!\"}")).andExpect(status().isUnauthorized());
+        JsonNode garden = body(mvc.perform(get("/api/services").param("q", "Kosenie")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString());
+        assertThat(garden.get("totalElements").asInt()).isZero();
     }
     private String login(String email) throws Exception {
         return body(mvc.perform(post("/api/auth/login").contentType("application/json")
