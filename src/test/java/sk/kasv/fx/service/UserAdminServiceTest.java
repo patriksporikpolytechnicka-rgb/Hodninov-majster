@@ -46,6 +46,11 @@ class UserAdminServiceTest {
                 .isInstanceOf(ApiException.class).hasMessageContaining("own account");
         assertThat(admin.isBlocked()).isFalse();
     }
+    @Test void adminTurnsOffTwoFactorForLockedOutUser() {
+        customer.setTotpSecret("SECRET"); customer.setTotpEnabled(true);
+        assertThat(subject.update(2L, new AdminUserRequest(null, null, true)).twoFactorEnabled()).isFalse();
+        assertThat(customer.getTotpSecret()).isNull();
+    }
     @Test void emptyChangeIsRejected() {
         assertThatThrownBy(() -> subject.update(2L, new AdminUserRequest(null, null)))
                 .isInstanceOf(ApiException.class).hasMessageContaining("Nothing to change");

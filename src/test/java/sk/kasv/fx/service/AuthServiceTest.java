@@ -121,6 +121,21 @@ class AuthServiceTest {
         assertThatThrownBy(() -> subject.resetPassword(new PasswordResetConfirm("reset", "other-password-1")))
                 .isInstanceOf(ApiException.class).hasMessageContaining("Invalid or expired");
     }
+    @Test void twoFactorLoginNeedsValidCode() {
+        signs();
+        User u = existing("correct-password");
+        u.setTotpSecret(sk.kasv.fx.security.Totp.newSecret()); u.setTotpEnabled(true);
+        when(users.findByEmail("test@example.invalid")).thenReturn(Optional.of(u));
+        assertThatThrownBy(() -> subject.login(new LoginRequest("test@example.invalid", "correct-password")))
+                .isInstanceOf(ApiException.class).hasMessage(AuthService.TWO_FACTOR_REQUIRED);
+        String code = TwoFactorServiceTest.currentCode(u.getTotpSecret(), Clock.systemUTC());
+        String wrong = code.equals("000000") ? "111111" : "000000";
+        assertThatThrownBy(() -> subject.login(new LoginRequest("test@example.invalid", "correct-password", wrong)))
+                .isInstanceOf(ApiException.class).hasMessage("Invalid two-factor code");
+        assertThat(subject.login(new LoginRequest("test@example.invalid", "correct-password", code)).accessToken()).isEqualTo("signed-token");
+        assertThatThrownBy(() -> subject.login(new LoginRequest("test@example.invalid", "correct-password", code)))
+                .isInstanceOf(ApiException.class).hasMessage("Invalid two-factor code");
+    }
     @Test void rejectsPasswordsOverBcryptByteLimit() {
         assertThatThrownBy(() -> subject.register(new RegisterRequest("test@example.invalid", "á".repeat(40), Role.CUSTOMER)))
                 .isInstanceOf(ApiException.class).hasMessageContaining("72 UTF-8 bytes");

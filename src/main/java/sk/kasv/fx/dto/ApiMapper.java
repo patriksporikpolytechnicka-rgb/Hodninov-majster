@@ -5,9 +5,9 @@ import static sk.kasv.fx.dto.ApiDtos.*;
 
 public final class ApiMapper {
     private ApiMapper() {}
-    public static UserResponse user(User u) { return new UserResponse(u.getId(), u.getEmail(), u.getRole()); }
+    public static UserResponse user(User u) { return new UserResponse(u.getId(), u.getEmail(), u.getRole(), u.isTotpEnabled()); }
     public static AdminUserResponse adminUser(User u) {
-        return new AdminUserResponse(u.getId(), u.getEmail(), u.getRole(), u.isBlocked(), u.getCreatedAt());
+        return new AdminUserResponse(u.getId(), u.getEmail(), u.getRole(), u.isBlocked(), u.isTotpEnabled(), u.getCreatedAt());
     }
     public static CategoryResponse category(Category c) { return new CategoryResponse(c.getId(), c.getName()); }
     public static ProviderResponse provider(ProviderProfile p) {

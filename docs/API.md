@@ -242,3 +242,24 @@ Tabuľky vytvára a mení Flyway zo súborov src/main/resources/db/migration (V1
 - Každá zmena tabuliek = nový súbor V<číslo>__popis.sql. Už nasadený súbor sa nikdy neupravuje.
 - Profil demo (H2 v pamäti) Flyway nepoužíva.
 - docs/openapi.json a docs/api-types.ts zatiaľ neobsahujú hodnotenia, administráciu, mazanie ani nové /api/auth endpointy.
+
+## Dvojfaktorové prihlásenie (Google Authenticator)
+
+Používa štandard TOTP (RFC 6238): 6-miestny kód, nový každých 30 sekúnd. Funguje s Google Authenticator,
+Microsoft Authenticator, Authy a pod. Server nič neposiela – aplikácia a server počítajú kód z rovnakého tajomstva.
+
+Zapnutie (prihlásený používateľ):
+1. POST /api/auth/2fa/setup → `{"secret":"JBSW...","otpauthUri":"otpauth://totp/..."}`.
+   Frontend z otpauthUri vykreslí QR kód (alebo zobrazí secret na ručné zadanie).
+2. Používateľ naskenuje QR kód a pošle prvý kód: POST /api/auth/2fa/enable `{"code":"123456"}` → 204.
+   Až potom je 2FA zapnuté.
+
+Prihlásenie so zapnutým 2FA:
+- POST /api/auth/login bez code → 401 s message „Two-factor code required“ (heslo bolo správne).
+- Frontend zobrazí pole na kód a pošle znova `{"email":"...","password":"...","code":"123456"}`.
+- Zlý kód → 401 „Invalid two-factor code“ a počíta sa do limitu 5 pokusov. Každý kód platí iba raz.
+- Tolerancia: prijme sa aj kód o 30 s starší alebo novší (rozdiel hodín v telefóne).
+
+Vypnutie: POST /api/auth/2fa/disable `{"code":"123456"}` → 204 (vyžaduje platný kód).
+Stratený telefón: admin cez PATCH /api/admin/users/{id} `{"disableTwoFactor":true}`.
+UserResponse (/me, login) aj AdminUserResponse obsahujú twoFactorEnabled. Stĺpce pridá migrácia V5.

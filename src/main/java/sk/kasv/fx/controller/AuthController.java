@@ -24,7 +24,11 @@ public class AuthController {
     @PostMapping("/register") @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@Valid @RequestBody RegisterRequest request) { return auth.register(request); }
 
-    /** At most 5 wrong passwords per e-mail (30 per IP) in 15 minutes, then 429. */
+    /**
+     * At most 5 wrong passwords or 2FA codes per e-mail (30 per IP) in 15 minutes, then 429.
+     * With 2FA on, the first call without a code returns 401 "Two-factor code required";
+     * the client then sends email, password and code together.
+     */
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest request, HttpServletRequest http) {
         String email = request.email().strip().toLowerCase(Locale.ROOT);
@@ -34,7 +38,8 @@ public class AuthController {
             attempts.succeeded("login", email);
             return response;
         } catch (ApiException e) {
-            if (e.getStatus() == 401) attempts.failed("login", email, http.getRemoteAddr());
+            if (e.getStatus() == 401 && !AuthService.TWO_FACTOR_REQUIRED.equals(e.getMessage()))
+                attempts.failed("login", email, http.getRemoteAddr());
             throw e;
         }
     }

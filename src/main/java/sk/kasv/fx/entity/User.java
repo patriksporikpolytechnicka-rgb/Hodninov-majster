@@ -32,6 +32,17 @@ public class User {
     @Column(nullable = false)
     private int tokenVersion;
 
+    /** Base32 secret shared with the authenticator app; set during setup, used once enabled. */
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Column(length = 64)
+    private String totpSecret;
+
+    @Column(nullable = false)
+    private boolean totpEnabled;
+
+    @Column(nullable = false)
+    private long totpLastStep;
+
     public User() {
     }
 
@@ -97,4 +108,13 @@ public class User {
     public void setTokenVersion(int tokenVersion) {
         this.tokenVersion = tokenVersion;
     }
+
+    public String getTotpSecret() { return totpSecret; }
+    public void setTotpSecret(String totpSecret) { this.totpSecret = totpSecret; }
+
+    public boolean isTotpEnabled() { return totpEnabled; }
+    public void setTotpEnabled(boolean totpEnabled) { this.totpEnabled = totpEnabled; }
+
+    public long getTotpLastStep() { return totpLastStep; }
+    public void setTotpLastStep(long totpLastStep) { this.totpLastStep = totpLastStep; }
 }

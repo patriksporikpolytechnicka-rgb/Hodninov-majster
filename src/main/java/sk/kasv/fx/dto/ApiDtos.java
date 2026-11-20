@@ -12,9 +12,12 @@ public final class ApiDtos {
 
     public record RegisterRequest(@NotBlank @Email @Size(max = 254) String email,
             @NotBlank @Size(min = 10, max = 72) String password, @NotNull Role role) {}
+    /** code: 6-digit authenticator code, needed only when the account has two-factor login on. */
     public record LoginRequest(@NotBlank @Email @Size(max = 254) String email,
-            @NotBlank @Size(max = 72) String password) {}
-    public record UserResponse(Long id, String email, Role role) {}
+            @NotBlank @Size(max = 72) String password, @Pattern(regexp = "\\d{6}") String code) {
+        public LoginRequest(String email, String password) { this(email, password, null); }
+    }
+    public record UserResponse(Long id, String email, Role role, boolean twoFactorEnabled) {}
     public record AuthResponse(String accessToken, String tokenType, long expiresIn, UserResponse user, String refreshToken) {}
     public record RefreshRequest(@NotBlank @Size(max = 200) String refreshToken) {}
     public record PasswordResetRequest(@NotBlank @Email @Size(max = 254) String email) {}
@@ -55,7 +58,13 @@ public final class ApiDtos {
     public record ReviewResponse(Long id, Long orderId, Long providerId, String serviceName,
             int rating, String comment, LocalDateTime createdAt) {}
     public record RatingResponse(Long providerId, Double average, long count) {}
-    public record AdminUserRequest(Role role, Boolean blocked) {}
-    public record AdminUserResponse(Long id, String email, Role role, boolean blocked, LocalDateTime createdAt) {}
+    /** disableTwoFactor: true turns off 2FA for a user who lost their phone. */
+    public record AdminUserRequest(Role role, Boolean blocked, Boolean disableTwoFactor) {
+        public AdminUserRequest(Role role, Boolean blocked) { this(role, blocked, null); }
+    }
+    public record AdminUserResponse(Long id, String email, Role role, boolean blocked, boolean twoFactorEnabled,
+            LocalDateTime createdAt) {}
+    public record TwoFactorSetupResponse(String secret, String otpauthUri) {}
+    public record TwoFactorCodeRequest(@NotBlank @Pattern(regexp = "\\d{6}") String code) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

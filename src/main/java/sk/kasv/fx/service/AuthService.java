@@ -13,6 +13,7 @@ import sk.kasv.fx.repository.RefreshTokenRepository;
 import sk.kasv.fx.repository.UserRepository;
 import sk.kasv.fx.security.SecurityConfig;
 import sk.kasv.fx.security.Tokens;
+import sk.kasv.fx.security.Totp;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Duration;
@@ -24,6 +25,8 @@ import static sk.kasv.fx.dto.ApiDtos.*;
 @Service
 @Transactional
 public class AuthService {
+    /** Sent with 401 when the password is right but the authenticator code is missing. */
+    public static final String TWO_FACTOR_REQUIRED = "Two-factor code required";
     static final long ACCESS_SECONDS = 900;
     static final Duration REFRESH_LIFETIME = Duration.ofDays(14);
     static final Duration RESET_LIFETIME = Duration.ofMinutes(30);
@@ -57,6 +60,13 @@ public class AuthService {
         boolean matches = passwords.matches(request.password(), user == null ? dummyHash : user.getPassword());
         if (user == null || !matches) throw new ApiException(401, "Invalid email or password");
         if (user.isBlocked()) throw new ApiException(403, "Account is blocked");
+        if (user.isTotpEnabled()) {
+            if (request.code() == null) throw new ApiException(401, TWO_FACTOR_REQUIRED);
+            long step = Totp.verify(user.getTotpSecret(), request.code(), clock.instant(), user.getTotpLastStep());
+            if (step < 0) throw new ApiException(401, "Invalid two-factor code");
+            user.setTotpLastStep(step);
+            users.saveAndFlush(user);
+        }
         return token(user);
     }
 
