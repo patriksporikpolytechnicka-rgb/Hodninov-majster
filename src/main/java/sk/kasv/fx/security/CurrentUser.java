@@ -15,8 +15,10 @@ public class CurrentUser {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof Jwt jwt)) throw new ApiException(401, "Authentication required");
         try {
-            return users.findById(Long.valueOf(jwt.getSubject()))
+            User user = users.findById(Long.valueOf(jwt.getSubject()))
                     .orElseThrow(() -> new ApiException(401, "Account no longer exists"));
+            if (user.isBlocked()) throw new ApiException(403, "Account is blocked");
+            return user;
         } catch (NumberFormatException e) { throw new ApiException(401, "Invalid token subject"); }
     }
 }

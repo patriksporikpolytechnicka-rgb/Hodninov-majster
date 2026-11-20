@@ -7,4 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 public interface ServiceRepository extends JpaRepository<Service, Long>, JpaSpecificationExecutor<Service> {
     Page<Service> findByProviderId(Long providerId, Pageable pageable);
+    Page<Service> findByProviderIdAndDeletedFalse(Long providerId, Pageable pageable);
+    boolean existsByCategoryId(Long categoryId);
 }

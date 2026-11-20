@@ -51,5 +51,7 @@ public final class ApiDtos {
     public record ReviewResponse(Long id, Long orderId, Long providerId, String serviceName,
             int rating, String comment, LocalDateTime createdAt) {}
     public record RatingResponse(Long providerId, Double average, long count) {}
+    public record AdminUserRequest(Role role, Boolean blocked) {}
+    public record AdminUserResponse(Long id, String email, Role role, boolean blocked, LocalDateTime createdAt) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

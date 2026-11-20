@@ -48,7 +48,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [ ] Chat zákazníka s poskytovateľom.
 - [ ] Hodnotenia po dokončenej zákazke. (backend hotový: API a db/reviews.sql; chýba frontend a spustenie skriptu na školskej DB)
 - [ ] Produkčné mesačné predplatné poskytovateľov (10 €), platobná brána a overené potvrdenia platieb. Bez provízií zo zákaziek.
-- [ ] Administrácia používateľov, kategórií a objednávok.
+- [ ] Administrácia používateľov, kategórií a objednávok. (backend hotový: úprava/mazanie kategórií, zoznam, blokovanie a zmena roly používateľov, mazanie služieb; chýba frontend a db/admin-and-delete.sql na školskej DB)
 - [ ] Testovanie, dokumentácia a nasadenie.
 
 ## Pripravené v kóde

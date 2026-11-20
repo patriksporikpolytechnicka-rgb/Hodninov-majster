@@ -44,6 +44,7 @@ public class AuthService {
         User user = users.findByEmail(normalize(request.email())).orElse(null);
         boolean matches = passwords.matches(request.password(), user == null ? dummyHash : user.getPassword());
         if (user == null || !matches) throw new ApiException(401, "Invalid email or password");
+        if (user.isBlocked()) throw new ApiException(403, "Account is blocked");
         return token(user);
     }
     private AuthResponse token(User user) {

@@ -33,4 +33,6 @@ public class ServiceController {
     public ServiceResponse update(@PathVariable @Positive Long id, @Valid @RequestBody ServiceRequest request) {
         return catalog.updateService(id, request);
     }
+    @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable @Positive Long id) { catalog.deleteService(id); }
 }

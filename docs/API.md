@@ -186,3 +186,27 @@ GET /api/providers/{id}/reviews?page=0&size=10 (verejné) – PageResponse s Rev
 GET /api/providers/{id}/rating (verejné) → `{"providerId":3,"average":4.5,"count":2}`; average je null, kým nie je žiadne hodnotenie.
 
 Na existujúcej databáze (školský server) musí správca najprv spustiť db/reviews.sql.
+
+## Administrácia (iba ADMIN)
+
+PUT /api/categories/{id} `{"name":"Záhrada"}` – premenovanie; rovnaký názov ako iná kategória vráti 409.
+DELETE /api/categories/{id} → 204; kategóriu, ktorú používa nejaká služba, nemožno zmazať (409).
+
+GET /api/admin/users?q=email&role=PROVIDER&blocked=false&page=0&size=20 – PageResponse s
+`{"id":2,"email":"...","role":"CUSTOMER","blocked":false,"createdAt":"..."}`.
+
+PATCH /api/admin/users/{id} `{"blocked":true}` alebo `{"role":"PROVIDER"}` (jedno alebo oboje):
+- admin nemôže meniť vlastný účet (409),
+- rolu možno zmeniť iba účtu bez histórie (bez profilu poskytovateľa a bez objednávok), inak 409 – taký účet treba zablokovať.
+
+Zablokovaný účet sa nemôže prihlásiť (403 „Account is blocked“) a jeho platné tokeny prestanú fungovať.
+Služby a verejný profil zablokovaného poskytovateľa sa nezobrazujú a nedajú sa objednať.
+
+## Mazanie služieb
+
+DELETE /api/services/{id} → 204 (vlastník-poskytovateľ alebo ADMIN):
+- s otvorenými objednávkami (PENDING, ACCEPTED, IN_PROGRESS) vráti 409 – najprv ich dokončiť alebo zrušiť,
+- služba bez objednávok sa odstráni úplne,
+- služba so starými objednávkami sa iba označí ako zmazaná: zmizne z katalógu aj z /api/services/mine, história objednávok zostane.
+
+Na existujúcej databáze (školský server) musí správca najprv spustiť db/admin-and-delete.sql.

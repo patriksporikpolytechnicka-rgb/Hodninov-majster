@@ -33,6 +33,10 @@ public class Service {
     @Column(nullable = false)
     private boolean active;
 
+    /** Deleted services that still have past orders are kept for history but never shown. */
+    @Column(nullable = false)
+    private boolean deleted;
+
     @Version
     private Long version;
 
@@ -61,6 +65,9 @@ public class Service {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+    public boolean isDeleted() { return deleted; }
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
     public Long getVersion() { return version; }
     public void setVersion(Long version) { this.version = version; }

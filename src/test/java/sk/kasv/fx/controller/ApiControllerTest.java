@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {AuthController.class, CategoryController.class, ProviderController.class,
-        ServiceController.class, OrderController.class, ReviewController.class}, properties = {
+        ServiceController.class, OrderController.class, ReviewController.class, AdminController.class}, properties = {
         "app.jwt.secret=test-only-key-at-least-thirty-two-bytes-long",
         "app.cors.allowed-origin=http://localhost:4200",
         "spring.jackson.deserialization.fail-on-unknown-properties=true"})
@@ -33,6 +33,7 @@ class ApiControllerTest {
     @MockitoBean CatalogService catalog;
     @MockitoBean OrderService orders;
     @MockitoBean ReviewService reviews;
+    @MockitoBean UserAdminService userAdmin;
     @MockitoBean CurrentUser current;
 
     @Test void categoriesArePublic() throws Exception {
@@ -93,6 +94,16 @@ class ApiControllerTest {
         mvc.perform(post("/api/orders/5/review").with(jwt()).contentType(MediaType.APPLICATION_JSON).content("{\"rating\":6}"))
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.fieldErrors.rating").exists());
         verifyNoInteractions(reviews);
+    }
+    @Test void adminAndDeleteEndpointsNeedLogin() throws Exception {
+        mvc.perform(get("/api/admin/users")).andExpect(status().isUnauthorized());
+        mvc.perform(delete("/api/services/3")).andExpect(status().isUnauthorized());
+        mvc.perform(delete("/api/categories/1")).andExpect(status().isUnauthorized());
+        verifyNoInteractions(userAdmin, catalog);
+    }
+    @Test void deletingServiceReturnsNoContent() throws Exception {
+        mvc.perform(delete("/api/services/3").with(jwt())).andExpect(status().isNoContent());
+        verify(catalog).deleteService(3L);
     }
     @Test void invalidJwtIsRejected() throws Exception {
         mvc.perform(get("/api/orders/my").header("Authorization", "Bearer invalid-token"))

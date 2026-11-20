@@ -24,6 +24,10 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    /** A blocked user cannot log in and existing tokens stop working. */
+    @Column(nullable = false)
+    private boolean blocked;
+
     public User() {
     }
 
@@ -72,5 +76,13 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 }

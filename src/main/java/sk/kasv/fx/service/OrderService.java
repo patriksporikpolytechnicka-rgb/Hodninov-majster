@@ -30,7 +30,7 @@ public class OrderService {
         if (customer.getRole() != Role.CUSTOMER) throw new ApiException(403, "Only customers can place orders");
         if (!request.scheduledAt().isAfter(LocalDateTime.now(clock))) throw new ApiException(400, "scheduledAt must be in the future (Europe/Bratislava)");
         Service service = services.findById(request.serviceId()).orElseThrow(() -> new ApiException(404, "Service not found"));
-        if (!service.isActive() || !service.getProvider().isAvailability()) throw new ApiException(409, "Service or provider is unavailable");
+        if (!service.isActive() || !service.getProvider().isAvailability() || service.getProvider().getUser().isBlocked()) throw new ApiException(409, "Service or provider is unavailable");
         if (!service.getProvider().hasSubscription(clock.instant())) throw new ApiException(402, "Provider subscription expired");
         if (service.getPriceUnit() == PriceUnit.JOB && request.quantity().stripTrailingZeros().scale() > 0)
             throw new ApiException(400, "JOB quantity must be a whole number");
