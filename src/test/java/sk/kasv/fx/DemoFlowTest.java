@@ -60,6 +60,22 @@ class DemoFlowTest {
                 .andReturn().getResponse().getContentAsString());
         assertThat(byPrice.get("content").get(0).get("price").asDouble())
                 .isLessThanOrEqualTo(byPrice.get("content").get(1).get("price").asDouble());
+        LocalDateTime when = LocalDateTime.now(ZoneId.of("Europe/Bratislava")).plusDays(5).withHour(10).withMinute(0).withSecond(0).withNano(0);
+        mvc.perform(put("/api/providers/me/working-hours").header("Authorization", "Bearer " + providerToken).contentType("application/json")
+                .content("{\"hours\":[{\"dayOfWeek\":" + when.getDayOfWeek().getValue() + ",\"start\":\"08:00\",\"end\":\"16:00\"}]}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.workingHours[0].start").value("08:00:00"));
+        String late = json.writeValueAsString(Map.of("serviceId", serviceId, "scheduledAt", when.withHour(18).toString(),
+                "quantity", 1, "address", "Školská 1, Košice"));
+        mvc.perform(post("/api/orders").header("Authorization", "Bearer " + customerToken).contentType("application/json").content(late))
+                .andExpect(status().isConflict());
+        mvc.perform(post("/api/providers/me/days-off").header("Authorization", "Bearer " + providerToken).contentType("application/json")
+                .content("{\"date\":\"" + when.toLocalDate() + "\"}")).andExpect(status().isOk());
+        String onDayOff = json.writeValueAsString(Map.of("serviceId", serviceId, "scheduledAt", when.toString(),
+                "quantity", 1, "address", "Školská 1, Košice"));
+        mvc.perform(post("/api/orders").header("Authorization", "Bearer " + customerToken).contentType("application/json").content(onDayOff))
+                .andExpect(status().isConflict());
+        mvc.perform(get("/api/providers/" + byRating.get("content").get(0).get("provider").get("id").asLong() + "/availability"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.daysOff[0]").value(when.toLocalDate().toString()));
         JsonNode filtered = body(mvc.perform(get("/api/services").param("q", "Nastavenie").param("location", "Košice"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);

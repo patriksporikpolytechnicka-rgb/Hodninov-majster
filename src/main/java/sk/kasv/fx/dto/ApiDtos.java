@@ -1,5 +1,6 @@
 package sk.kasv.fx.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import sk.kasv.fx.entity.*;
 import java.math.BigDecimal;
@@ -75,5 +76,11 @@ public final class ApiDtos {
     public record MessageRequest(@NotBlank @Size(max = 2000) String text) {}
     /** senderRole: CUSTOMER or PROVIDER, i.e. which side of the order wrote it. */
     public record MessageResponse(Long id, Long orderId, Long senderId, Role senderRole, String text, LocalDateTime createdAt) {}
+    /** dayOfWeek: 1 = Monday ... 7 = Sunday; times like "08:00". An order may start from start up to (not including) end. */
+    public record WorkingHoursEntry(@NotNull @Min(1) @Max(7) Integer dayOfWeek, @NotNull java.time.LocalTime start,
+            @NotNull java.time.LocalTime end) {}
+    public record WorkingHoursRequest(@NotNull @Size(max = 7) List<@Valid @NotNull WorkingHoursEntry> hours) {}
+    public record DayOffRequest(@NotNull java.time.LocalDate date) {}
+    public record AvailabilityResponse(List<WorkingHoursEntry> workingHours, List<java.time.LocalDate> daysOff) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

@@ -302,3 +302,14 @@ Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://lo
 - GET /api/orders/{id}/messages?after=0 → zoznam od najstaršej, najviac 100 naraz. Frontend si pamätá id poslednej správy
   a každých pár sekúnd sa pýta `?after=<id>` (polling, bez WebSocketu). Admin môže správy čítať, nie písať.
 - MessageResponse: `{"id":9,"orderId":5,"senderId":1,"senderRole":"CUSTOMER","text":"...","createdAt":"..."}`.
+
+## Dostupnosť majstra
+
+- GET /api/providers/{id}/availability (verejné) → `{"workingHours":[{"dayOfWeek":1,"start":"08:00:00","end":"16:00:00"}],"daysOff":["2026-12-24"]}`
+  (dayOfWeek 1 = pondelok … 7 = nedeľa; daysOff iba od dnes ďalej).
+- PUT /api/providers/me/working-hours `{"hours":[{"dayOfWeek":1,"start":"08:00","end":"16:00"}, ...]}` – nahradí celý týždeň,
+  každý deň najviac raz, start < end. Prázdny zoznam = bez obmedzenia.
+- POST /api/providers/me/days-off `{"date":"2026-12-24"}` (dnes alebo neskôr), DELETE /api/providers/me/days-off/2026-12-24 → 204.
+- Objednávka: v deň voľna → 409 „The handyman is not available on that day“; mimo pracovného času → 409
+  „Outside the handyman's working hours“ (začiatok musí byť od start do end, end už nie). Majster bez pracovných hodín
+  sa dá objednať kedykoľvek ako doteraz.

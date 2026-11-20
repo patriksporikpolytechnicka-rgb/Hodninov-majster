@@ -25,9 +25,11 @@ public class OrderService {
     private final CurrentUser current;
     private final Clock clock;
     private final ApplicationEventPublisher events;
+    private final AvailabilityService availability;
     public OrderService(OrderRepository orders, ServiceRepository services, CurrentUser current, Clock clock,
-                        ApplicationEventPublisher events) {
-        this.orders = orders; this.services = services; this.current = current; this.clock = clock; this.events = events;
+                        ApplicationEventPublisher events, AvailabilityService availability) {
+        this.orders = orders; this.services = services; this.current = current; this.clock = clock;
+        this.events = events; this.availability = availability;
     }
     @Transactional
     public OrderResponse create(OrderRequest request) {
@@ -40,6 +42,7 @@ public class OrderService {
         if (!service.getProvider().hasSubscription(clock.instant())) throw new ApiException(402, "Provider subscription expired");
         if (service.getPriceUnit() == PriceUnit.JOB && request.quantity().stripTrailingZeros().scale() > 0)
             throw new ApiException(400, "JOB quantity must be a whole number");
+        availability.requireAvailable(service.getProvider(), request.scheduledAt());
         Order order = new Order();
         order.setCustomer(customer); order.setProvider(service.getProvider()); order.setService(service);
         order.setServiceName(service.getName()); order.setUnitPrice(service.getPrice()); order.setPriceUnit(service.getPriceUnit());

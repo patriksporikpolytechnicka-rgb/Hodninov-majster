@@ -19,7 +19,8 @@ class OrderServiceTest {
     CurrentUser current = mock(CurrentUser.class);
     Clock clock = Clock.fixed(Instant.parse("2026-09-26T10:00:00Z"), ZoneId.of("Europe/Bratislava"));
     org.springframework.context.ApplicationEventPublisher events = mock(org.springframework.context.ApplicationEventPublisher.class);
-    OrderService subject = new OrderService(orders, services, current, clock, events);
+    AvailabilityService availability = mock(AvailabilityService.class);
+    OrderService subject = new OrderService(orders, services, current, clock, events, availability);
     User customer = new User("customer@example.invalid", "hash", Role.CUSTOMER);
     User providerUser = new User("provider@example.invalid", "hash", Role.PROVIDER);
     ProviderProfile provider = new ProviderProfile();
@@ -49,7 +50,7 @@ class OrderServiceTest {
     }
     @Test void expiredSubscriptionBlocksNewOrdersAndAcceptanceButAllowsCompletion() {
         Clock expiredClock = Clock.offset(clock, Duration.ofDays(30));
-        OrderService expired = new OrderService(orders, services, current, expiredClock, events);
+        OrderService expired = new OrderService(orders, services, current, expiredClock, events, availability);
         var future = new OrderRequest(4L, LocalDateTime.now(expiredClock).plusDays(1), BigDecimal.ONE, "Address", null);
         assertThatThrownBy(() -> expired.create(future)).isInstanceOf(ApiException.class).hasMessageContaining("subscription expired");
         when(current.require()).thenReturn(providerUser);
