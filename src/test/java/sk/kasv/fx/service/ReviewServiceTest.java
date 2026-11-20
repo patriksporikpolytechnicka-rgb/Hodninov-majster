@@ -44,6 +44,14 @@ class ReviewServiceTest {
         assertThat(response.providerId()).isEqualTo(3L);
         assertThat(response.serviceName()).isEqualTo("Assembly");
     }
+    @Test void newReviewUpdatesHandymansRating() {
+        when(reviews.averageRating(3L)).thenReturn(4.5);
+        when(reviews.countByProviderId(3L)).thenReturn(2L);
+        subject.create(5L, new ReviewRequest(4, null));
+        assertThat(provider.getRatingAverage()).isEqualTo(4.5);
+        assertThat(provider.getRatingCount()).isEqualTo(2);
+        verify(providers).save(provider);
+    }
     @Test void blankCommentIsStoredAsNull() {
         assertThat(subject.create(5L, new ReviewRequest(4, "   ")).comment()).isNull();
     }

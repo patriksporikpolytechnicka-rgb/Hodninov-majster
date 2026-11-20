@@ -42,7 +42,12 @@ public class ReviewService {
         String comment = request.comment() == null ? null : request.comment().strip();
         review.setComment(comment == null || comment.isEmpty() ? null : comment);
         review.setCreatedAt(LocalDateTime.now(clock));
-        return ApiMapper.review(reviews.saveAndFlush(review));
+        review = reviews.saveAndFlush(review);
+        ProviderProfile provider = order.getProvider();
+        Double average = reviews.averageRating(provider.getId());
+        provider.setRating(average == null ? 0 : average, (int) reviews.countByProviderId(provider.getId()));
+        providers.save(provider);
+        return ApiMapper.review(review);
     }
 
     /** The review of one order, for its customer, provider or an admin. */

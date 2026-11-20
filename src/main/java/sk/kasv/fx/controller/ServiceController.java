@@ -19,9 +19,10 @@ public class ServiceController {
             @RequestParam(required = false) @Positive Long providerId,
             @RequestParam(required = false) @Size(max = 150) String q,
             @RequestParam(required = false) @Size(max = 150) String location,
+            @RequestParam(required = false) @Pattern(regexp = "newest|price_asc|price_desc|rating") String sort,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
-        return catalog.services(categoryId, providerId, q, location, page, size);
+        return catalog.services(categoryId, providerId, q, location, sort, page, size);
     }
     @GetMapping("/mine")
     public PageResponse<ServiceResponse> mine(@RequestParam(defaultValue = "0") @Min(0) int page,

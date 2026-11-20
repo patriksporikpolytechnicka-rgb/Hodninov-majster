@@ -29,6 +29,17 @@ public class ProviderProfile {
     private java.time.Instant subscriptionStart;
     private java.time.Instant subscriptionEnd;
     private boolean subscriptionPaid;
+
+    /** Average of all reviews (0 when there are none) and their number; updated with every new review. */
+    @Column(nullable = false)
+    private double ratingAverage;
+
+    @Column(nullable = false)
+    private int ratingCount;
+
+    public double getRatingAverage() { return ratingAverage; }
+    public int getRatingCount() { return ratingCount; }
+    public void setRating(double average, int count) { this.ratingAverage = average; this.ratingCount = count; }
     public java.time.Instant getSubscriptionStart() { return subscriptionStart; }
     public java.time.Instant getSubscriptionEnd() { return subscriptionEnd; }
     public boolean isSubscriptionPaid() { return subscriptionPaid; }

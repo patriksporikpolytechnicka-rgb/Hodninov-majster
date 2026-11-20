@@ -13,7 +13,8 @@ public final class ApiMapper {
     public static CategoryResponse category(Category c) { return new CategoryResponse(c.getId(), c.getName()); }
     public static ProviderResponse provider(ProviderProfile p) {
         return new ProviderResponse(p.getId(), p.getName(), p.getDescription(), p.getLocation(),
-                p.getPhone(), p.getProfileImage(), p.isAvailability());
+                p.getPhone(), p.getProfileImage(), p.isAvailability(),
+                p.getRatingCount() == 0 ? null : Math.round(p.getRatingAverage() * 10) / 10.0, p.getRatingCount());
     }
     public static ServiceResponse service(Service s) {
         return new ServiceResponse(s.getId(), provider(s.getProvider()), category(s.getCategory()),

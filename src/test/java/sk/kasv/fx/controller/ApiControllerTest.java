@@ -65,6 +65,7 @@ class ApiControllerTest {
     @Test void paginationIsBounded() throws Exception {
         mvc.perform(get("/api/services?size=101")).andExpect(status().isBadRequest());
         mvc.perform(get("/api/services?page=-1")).andExpect(status().isBadRequest());
+        mvc.perform(get("/api/services?sort=cheapest")).andExpect(status().isBadRequest());
         verifyNoInteractions(catalog);
     }
     @Test void angularPreflightIsAllowed() throws Exception {

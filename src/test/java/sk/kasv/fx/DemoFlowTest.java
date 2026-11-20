@@ -45,6 +45,16 @@ class DemoFlowTest {
         mvc.perform(get("/api/orders/" + orderId).header("Authorization", "Bearer " + customerToken))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("COMPLETED"));
         mvc.perform(get("/api/orders/my")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/orders/" + orderId + "/review").header("Authorization", "Bearer " + customerToken)
+                .contentType("application/json").content("{\"rating\":5,\"comment\":\"Výborne\"}")).andExpect(status().isCreated());
+        JsonNode byRating = body(mvc.perform(get("/api/services").param("sort", "rating")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString());
+        assertThat(byRating.get("content").get(0).get("provider").get("rating").asDouble()).isEqualTo(5.0);
+        assertThat(byRating.get("content").get(0).get("provider").get("reviewCount").asInt()).isEqualTo(1);
+        JsonNode byPrice = body(mvc.perform(get("/api/services").param("sort", "price_asc")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString());
+        assertThat(byPrice.get("content").get(0).get("price").asDouble())
+                .isLessThanOrEqualTo(byPrice.get("content").get(1).get("price").asDouble());
         JsonNode filtered = body(mvc.perform(get("/api/services").param("q", "Nastavenie").param("location", "Košice"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);

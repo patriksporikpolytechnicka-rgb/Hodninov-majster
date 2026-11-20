@@ -72,14 +72,27 @@ public class CatalogService {
         profile.setAvailability(request.availability()); profile.startTrial(clock.instant());
         return ApiMapper.provider(providers.saveAndFlush(profile));
     }
-    public PageResponse<ServiceResponse> services(Long categoryId, Long providerId, String q, String location, int page, int size) {
+    /** sort: null (oldest first), newest, price_asc, price_desc or rating (best rated handymen first). */
+    public PageResponse<ServiceResponse> services(Long categoryId, Long providerId, String q, String location,
+                                                  String sort, int page, int size) {
         Specification<Service> spec = (root, query, cb) -> cb.and(cb.isTrue(root.get("active")),
                 cb.isFalse(root.get("provider").get("user").get("blocked")));
         if (categoryId != null) spec = spec.and((r, query, cb) -> cb.equal(r.get("category").get("id"), categoryId));
         if (providerId != null) spec = spec.and((r, query, cb) -> cb.equal(r.get("provider").get("id"), providerId));
         if (q != null && !q.isBlank()) spec = spec.and((r, query, cb) -> cb.like(cb.lower(r.get("name")), pattern(q), '!'));
         if (location != null && !location.isBlank()) spec = spec.and((r, query, cb) -> cb.like(cb.lower(r.get("provider").get("location")), pattern(location), '!'));
-        return PageResponse.from(services.findAll(spec, PageRequest.of(page, size, Sort.by("id"))).map(ApiMapper::service));
+        return PageResponse.from(services.findAll(spec, PageRequest.of(page, size, sortBy(sort))).map(ApiMapper::service));
+    }
+    static Sort sortBy(String sort) {
+        Sort byId = Sort.by("id");
+        if (sort == null) return byId;
+        return switch (sort) {
+            case "newest" -> Sort.by(Sort.Direction.DESC, "id");
+            case "price_asc" -> Sort.by(Sort.Direction.ASC, "price").and(byId);
+            case "price_desc" -> Sort.by(Sort.Direction.DESC, "price").and(byId);
+            case "rating" -> Sort.by(Sort.Direction.DESC, "provider.ratingAverage", "provider.ratingCount").and(byId);
+            default -> throw new ApiException(400, "Unknown sort");
+        };
     }
     public PageResponse<ServiceResponse> myServices(int page, int size) {
         return PageResponse.from(services.findByProviderIdAndDeletedFalse(myProvider().getId(),

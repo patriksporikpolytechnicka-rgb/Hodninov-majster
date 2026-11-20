@@ -288,3 +288,10 @@ Posielajú sa automaticky po uložení zmeny (na pozadí, požiadavka na ne neč
 - prijatá, odmietnutá, začatá, dokončená → zákazník,
 - zrušená → druhá strana (zrušil zákazník → majster, zrušil majster → zákazník).
 Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://localhost:4200).
+
+## Hodnotenie v katalógu a triedenie
+
+- ProviderResponse (aj vnútri ServiceResponse) má `rating` (priemer zaokrúhlený na 1 desatinné miesto, null bez hodnotení)
+  a `reviewCount`. Hodnota sa prepočíta pri každom novom hodnotení (migrácia V7 ju doplní aj pre staré hodnotenia).
+- GET /api/services?sort=newest | price_asc | price_desc | rating – bez sort ostáva pôvodné poradie (najstaršie prvé).
+  `rating` = najlepšie hodnotení majstri prví (pri zhode viac hodnotení). Neznáma hodnota → 400.

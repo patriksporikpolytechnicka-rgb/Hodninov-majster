@@ -31,8 +31,9 @@ public final class ApiDtos {
             @NotBlank @Size(max = 150) String location,
             @NotBlank @Size(max = 40) String phone,
             @Size(max = 255) String profileImage, @NotNull Boolean availability) {}
+    /** rating: average of reviews rounded to one decimal, null when there are no reviews yet. */
     public record ProviderResponse(Long id, String name, String description, String location,
-            String phone, String profileImage, boolean availability) {}
+            String phone, String profileImage, boolean availability, Double rating, int reviewCount) {}
     public record ServiceRequest(@NotNull @Positive Long categoryId,
             @NotBlank @Size(max = 150) String name,
             @NotBlank @Size(max = 2000) String description,
