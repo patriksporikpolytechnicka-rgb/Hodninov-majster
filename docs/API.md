@@ -322,3 +322,10 @@ Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://lo
 - GET /api/providers/{id}/photo (verejné) – obrázok, cache 1 deň (parameter v sa mení pri každom nahratí).
 - DELETE /api/providers/me/photo → 204, profileImage bude null.
 - PUT /api/providers/me už pole profileImage ignoruje (nastavuje ho iba nahratie fotky).
+
+## Štatistiky majstra
+
+GET /api/providers/me/stats (iba PROVIDER) →
+`{"ordersTotal":4,"ordersByStatus":{"PENDING":1,"ACCEPTED":0,...},"upcomingOrders":0,"completedThisMonth":2,"earningsThisMonth":80.00,"completedTotal":3,"earningsTotal":120.50,"rating":4.3,"reviewCount":4}`
+- Mesiac sa určuje podľa termínu objednávky (Europe/Bratislava). Zárobok = súčet cien DOKONČENÝCH objednávok (bez provízie).
+- upcomingOrders = prijaté alebo prebiehajúce objednávky s termínom od teraz.

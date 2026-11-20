@@ -35,6 +35,7 @@ class ApiControllerTest {
     @MockitoBean ReviewService reviews;
     @MockitoBean UserAdminService userAdmin;
     @MockitoBean LoginAttemptService attempts;
+    @MockitoBean ProviderStatsService providerStats;
     @MockitoBean CurrentUser current;
 
     @Test void categoriesArePublic() throws Exception {

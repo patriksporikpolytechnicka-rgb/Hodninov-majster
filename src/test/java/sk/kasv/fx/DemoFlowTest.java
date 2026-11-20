@@ -49,6 +49,10 @@ class DemoFlowTest {
         }
         mvc.perform(get("/api/orders/" + orderId).header("Authorization", "Bearer " + customerToken))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("COMPLETED"));
+        mvc.perform(get("/api/providers/me/stats").header("Authorization", "Bearer " + providerToken)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.ordersByStatus.COMPLETED").value(1)).andExpect(jsonPath("$.completedTotal").value(1))
+                .andExpect(jsonPath("$.earningsTotal").value(51.0)).andExpect(jsonPath("$.ordersTotal").value(1));
+        mvc.perform(get("/api/providers/me/stats").header("Authorization", "Bearer " + customerToken)).andExpect(status().isForbidden());
         mvc.perform(get("/api/orders/my")).andExpect(status().isUnauthorized());
         mvc.perform(post("/api/orders/" + orderId + "/review").header("Authorization", "Bearer " + customerToken)
                 .contentType("application/json").content("{\"rating\":5,\"comment\":\"Výborne\"}")).andExpect(status().isCreated());

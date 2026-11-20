@@ -12,8 +12,10 @@ import static sk.kasv.fx.dto.ApiDtos.*;
 @RequestMapping("/api/providers")
 public class ProviderController {
     private final CatalogService catalog;
-    public ProviderController(CatalogService catalog) { this.catalog = catalog; }
+    private final sk.kasv.fx.service.ProviderStatsService stats;
+    public ProviderController(CatalogService catalog, sk.kasv.fx.service.ProviderStatsService stats) { this.catalog = catalog; this.stats = stats; }
     @GetMapping("/{id}") public ProviderResponse get(@PathVariable @Positive Long id) { return catalog.provider(id); }
     @GetMapping("/me") public ProviderResponse me() { return catalog.myProfile(); }
+    @GetMapping("/me/stats") public ProviderStatsResponse stats() { return stats.mine(); }
     @PutMapping("/me") public ProviderResponse save(@Valid @RequestBody ProviderRequest request) { return catalog.saveProfile(request); }
 }

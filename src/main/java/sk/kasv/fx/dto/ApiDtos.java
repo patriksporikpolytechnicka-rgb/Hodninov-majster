@@ -82,5 +82,12 @@ public final class ApiDtos {
     public record WorkingHoursRequest(@NotNull @Size(max = 7) List<@Valid @NotNull WorkingHoursEntry> hours) {}
     public record DayOffRequest(@NotNull java.time.LocalDate date) {}
     public record AvailabilityResponse(List<WorkingHoursEntry> workingHours, List<java.time.LocalDate> daysOff) {}
+    /**
+     * Handyman dashboard. Months follow the order's scheduled date (Europe/Bratislava); earnings are order prices
+     * of COMPLETED orders (no commission is taken). upcomingOrders: accepted or in progress, from now on.
+     */
+    public record ProviderStatsResponse(long ordersTotal, Map<OrderStatus, Long> ordersByStatus, long upcomingOrders,
+            long completedThisMonth, BigDecimal earningsThisMonth, long completedTotal, BigDecimal earningsTotal,
+            Double rating, int reviewCount) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }
