@@ -54,7 +54,7 @@ class CatalogServiceTest {
         subject.deleteService(3L);
         assertThat(service.isDeleted()).isTrue();
         assertThat(service.isActive()).isFalse();
-        verify(services, never()).delete(any());
+        verify(services, never()).delete(any(Service.class));
     }
     @Test void serviceWithOpenOrdersCannotBeDeleted() {
         User owner = new User("b@example.invalid", "hash", Role.PROVIDER); owner.setId(2L);
@@ -62,7 +62,7 @@ class CatalogServiceTest {
         when(current.require()).thenReturn(owner);
         when(orders.existsByServiceIdAndStatusIn(eq(3L), any())).thenReturn(true);
         assertThatThrownBy(() -> subject.deleteService(3L)).isInstanceOf(ApiException.class).hasMessageContaining("open orders");
-        verify(services, never()).delete(any());
+        verify(services, never()).delete(any(Service.class));
     }
     @Test void onlyOwnerOrAdminDeletesService() {
         User owner = new User("b@example.invalid", "hash", Role.PROVIDER); owner.setId(2L);
