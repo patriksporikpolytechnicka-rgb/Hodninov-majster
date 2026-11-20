@@ -107,6 +107,26 @@ class DemoFlowTest {
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);
     }
+    @Autowired org.springframework.jdbc.core.JdbcTemplate jdbc;
+
+    @Test void twoFactorLoginWorksAndSecretIsEncryptedInDatabase() throws Exception {
+        String token = login("technik@demo.sk");
+        JsonNode setup = body(mvc.perform(post("/api/auth/2fa/setup").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        String secret = setup.get("secret").asText();
+        String stored = jdbc.queryForObject("select totp_secret from users where email = 'technik@demo.sk'", String.class);
+        assertThat(stored).startsWith("v1:").doesNotContain(secret);
+        mvc.perform(post("/api/auth/2fa/enable").header("Authorization", "Bearer " + token).contentType("application/json")
+                .content("{\"code\":\"" + sk.kasv.fx.security.Totp.codeAt(secret, java.time.Instant.now()) + "\"}")).andExpect(status().isNoContent());
+        mvc.perform(post("/api/auth/login").contentType("application/json")
+                .content("{\"email\":\"technik@demo.sk\",\"password\":\"DemoHeslo123!\"}"))
+                .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message").value("Two-factor code required"));
+        String nextCode = sk.kasv.fx.security.Totp.codeAt(secret, java.time.Instant.now().plusSeconds(30));
+        mvc.perform(post("/api/auth/login").contentType("application/json")
+                .content("{\"email\":\"technik@demo.sk\",\"password\":\"DemoHeslo123!\",\"code\":\"" + nextCode + "\"}"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.user.twoFactorEnabled").value(true));
+    }
+
     @Test void handymanCanDeleteAccount() throws Exception {
         String token = login("zahrada@demo.sk");
         mvc.perform(post("/api/account/delete").header("Authorization", "Bearer " + token).contentType("application/json")

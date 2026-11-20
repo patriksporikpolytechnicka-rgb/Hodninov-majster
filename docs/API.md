@@ -348,3 +348,10 @@ ACCOUNT_DELETED. Záznam vznikne v tej istej transakcii ako akcia (ak akcia zlyh
     Profil majstra sa vymaže (meno „Zmazaný účet“), služby, fotka, pracovný čas a voľno zmiznú. V objednávkach zákazníka
     sa vymaže adresa a poznámka, v hodnoteniach komentár (hviezdičky ostanú), texty správ sa nahradia „[správa zmazaná]“.
   - Pôvodný e-mail sa dá potom znova použiť na novú registráciu. Do audit logu sa zapíše ACCOUNT_DELETED (bez e-mailu).
+
+## Šifrovanie 2FA tajomstiev
+
+Stĺpec users.totp_secret je šifrovaný (AES-256-GCM, formát `v1:...`). Kľúč: premenná TOTP_ENCRYPTION_KEY
+(Base64 z 32 náhodných bajtov, napr. `openssl rand -base64 32`). Bez nej sa kľúč odvodí z JWT_SECRET – potom pri zmene
+JWT_SECRET prestanú fungovať 2FA kódy všetkých používateľov (admin im 2FA vypne cez disableTwoFactor). Preto v produkcii
+nastavte TOTP_ENCRYPTION_KEY a nemeňte ho. Staré nešifrované hodnoty sa dajú stále prečítať a zašifrujú sa pri ďalšej zmene.

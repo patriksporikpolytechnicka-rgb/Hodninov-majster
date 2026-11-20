@@ -38,7 +38,8 @@ public class User {
 
     /** Base32 secret shared with the authenticator app; set during setup, used once enabled. */
     @com.fasterxml.jackson.annotation.JsonIgnore
-    @Column(length = 64)
+    @Column(length = 255)
+    @Convert(converter = sk.kasv.fx.security.EncryptedStringConverter.class)
     private String totpSecret;
 
     @Column(nullable = false)
