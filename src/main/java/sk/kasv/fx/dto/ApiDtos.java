@@ -15,7 +15,11 @@ public final class ApiDtos {
     public record LoginRequest(@NotBlank @Email @Size(max = 254) String email,
             @NotBlank @Size(max = 72) String password) {}
     public record UserResponse(Long id, String email, Role role) {}
-    public record AuthResponse(String accessToken, String tokenType, long expiresIn, UserResponse user) {}
+    public record AuthResponse(String accessToken, String tokenType, long expiresIn, UserResponse user, String refreshToken) {}
+    public record RefreshRequest(@NotBlank @Size(max = 200) String refreshToken) {}
+    public record PasswordResetRequest(@NotBlank @Email @Size(max = 254) String email) {}
+    public record PasswordResetConfirm(@NotBlank @Size(max = 200) String token,
+            @NotBlank @Size(min = 10, max = 72) String newPassword) {}
     public record CategoryRequest(@NotBlank @Size(max = 100) String name) {}
     public record CategoryResponse(Long id, String name) {}
     public record ProviderRequest(@NotBlank @Size(max = 150) String name,

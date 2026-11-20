@@ -27,7 +27,7 @@ POST /api/auth/login → 200: rovnaké email/password, bez role.
 Oba endpointy vracajú:
 
 ```json
-{"accessToken":"<JWT>","tokenType":"Bearer","expiresIn":3600,"user":{"id":1,"email":"customer@example.com","role":"CUSTOMER"}}
+{"accessToken":"<JWT>","tokenType":"Bearer","expiresIn":900,"user":{"id":1,"email":"customer@example.com","role":"CUSTOMER"},"refreshToken":"<opaque>"}
 ```
 
 Na chránené požiadavky pridajte Authorization: Bearer <JWT>.
@@ -185,7 +185,7 @@ GET /api/providers/{id}/reviews?page=0&size=10 (verejné) – PageResponse s Rev
 
 GET /api/providers/{id}/rating (verejné) → `{"providerId":3,"average":4.5,"count":2}`; average je null, kým nie je žiadne hodnotenie.
 
-Na existujúcej databáze (školský server) musí správca najprv spustiť db/reviews.sql.
+Tabuľku vytvorí Flyway migrácia V2 pri štarte aplikácie.
 
 ## Administrácia (iba ADMIN)
 
@@ -209,4 +209,36 @@ DELETE /api/services/{id} → 204 (vlastník-poskytovateľ alebo ADMIN):
 - služba bez objednávok sa odstráni úplne,
 - služba so starými objednávkami sa iba označí ako zmazaná: zmizne z katalógu aj z /api/services/mine, história objednávok zostane.
 
-Na existujúcej databáze (školský server) musí správca najprv spustiť db/admin-and-delete.sql.
+Nové stĺpce pridá Flyway migrácia V3 pri štarte aplikácie.
+
+## Prihlásenie, obnovenie tokenu a odhlásenie
+
+- Access token (JWT) platí 15 minút (expiresIn 900). Login a registrácia vracajú aj refreshToken (platí 14 dní).
+- POST /api/auth/refresh `{"refreshToken":"..."}` → nový AuthResponse s novým access aj refresh tokenom.
+  Starý refresh token sa tým zneplatní. Opätovné použitie už vymeneného tokenu ukončí všetky relácie používateľa (401).
+- POST /api/auth/logout `{"refreshToken":"..."}` → 204, ukončí jednu reláciu (verejné, stačí token).
+- POST /api/auth/logout-all (prihlásený) → 204, ukončí všetky relácie; aj ešte platné access tokeny prestanú fungovať.
+- Frontend: po 401 skúsiť raz /refresh; ak zlyhá, odhlásiť. Refresh token neposielať nikam inam ako na /api/auth.
+
+Limit pokusov: po 5 neúspešných prihláseniach na jeden e-mail (alebo 30 z jednej IP) v priebehu 15 minút
+vráti /login aj pri správnom hesle 429 „Too many attempts“. Rovnaký limit platí pre žiadosti o obnovenie hesla.
+Počítadlo je v pamäti servera (reštart ho vynuluje).
+
+## Obnovenie hesla
+
+1. POST /api/auth/password-reset/request `{"email":"..."}` → vždy 202 (neprezradí, či e-mail existuje).
+   Ak účet existuje, príde e-mail s odkazom `PASSWORD_RESET_LINK + token`, platí 30 minút a iba raz.
+2. POST /api/auth/password-reset/confirm `{"token":"...","newPassword":"..."}` → 204. Heslo 10–72 znakov.
+   Zmena hesla odhlási používateľa zo všetkých zariadení. Neplatný, použitý alebo starý token → 400.
+
+E-mail potrebuje SMTP server (spring.mail.host, spring.mail.port, spring.mail.username, spring.mail.password)
+a premenné PASSWORD_RESET_LINK (napr. https://.../obnova-hesla?token=) a MAIL_FROM.
+V profiloch demo a local sa odkaz iba vypíše do konzoly servera.
+
+## Databázové migrácie (Flyway)
+
+Tabuľky vytvára a mení Flyway zo súborov src/main/resources/db/migration (V1, V2, ...); Hibernate ich iba kontroluje (validate).
+- Školská DB bez histórie Flyway sa pri prvom štarte označí ako verzia 1 a dostane iba novšie migrácie.
+- Každá zmena tabuliek = nový súbor V<číslo>__popis.sql. Už nasadený súbor sa nikdy neupravuje.
+- Profil demo (H2 v pamäti) Flyway nepoužíva.
+- docs/openapi.json a docs/api-types.ts zatiaľ neobsahujú hodnotenia, administráciu, mazanie ani nové /api/auth endpointy.

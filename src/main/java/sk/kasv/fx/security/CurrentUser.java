@@ -18,6 +18,9 @@ public class CurrentUser {
             User user = users.findById(Long.valueOf(jwt.getSubject()))
                     .orElseThrow(() -> new ApiException(401, "Account no longer exists"));
             if (user.isBlocked()) throw new ApiException(403, "Account is blocked");
+            Object version = jwt.getClaims().get("tv");
+            int tokenVersion = version instanceof Number n ? n.intValue() : 0;
+            if (tokenVersion != user.getTokenVersion()) throw new ApiException(401, "Token was revoked");
             return user;
         } catch (NumberFormatException e) { throw new ApiException(401, "Invalid token subject"); }
     }

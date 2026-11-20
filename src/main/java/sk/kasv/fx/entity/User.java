@@ -28,6 +28,10 @@ public class User {
     @Column(nullable = false)
     private boolean blocked;
 
+    /** Raised on logout everywhere and password reset; older access tokens stop working. */
+    @Column(nullable = false)
+    private int tokenVersion;
+
     public User() {
     }
 
@@ -84,5 +88,13 @@ public class User {
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public int getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void setTokenVersion(int tokenVersion) {
+        this.tokenVersion = tokenVersion;
     }
 }

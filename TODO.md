@@ -46,9 +46,9 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 ## Neskoršie časti MVP
 
 - [ ] Chat zákazníka s poskytovateľom.
-- [ ] Hodnotenia po dokončenej zákazke. (backend hotový: API a db/reviews.sql; chýba frontend a spustenie skriptu na školskej DB)
+- [ ] Hodnotenia po dokončenej zákazke. (backend hotový; chýba frontend)
 - [ ] Produkčné mesačné predplatné poskytovateľov (10 €), platobná brána a overené potvrdenia platieb. Bez provízií zo zákaziek.
-- [ ] Administrácia používateľov, kategórií a objednávok. (backend hotový: úprava/mazanie kategórií, zoznam, blokovanie a zmena roly používateľov, mazanie služieb; chýba frontend a db/admin-and-delete.sql na školskej DB)
+- [ ] Administrácia používateľov, kategórií a objednávok. (backend hotový: úprava/mazanie kategórií, zoznam, blokovanie a zmena roly používateľov, mazanie služieb; chýba frontend)
 - [ ] Testovanie, dokumentácia a nasadenie.
 
 ## Pripravené v kóde
@@ -66,9 +66,9 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [x] Prešlo 26 unit/MVC testov a integračný demo test.
 - [x] So správcom databázy pripraviť prvý ADMIN účet a základné kategórie. (5. 11. 2026: admin@hodinovymajster.sk, kategórie cez db/school-categories.sql)
 - [ ] Overiť JPA mapovania, filtre, unikátnosť a súbežné zmeny na PostgreSQL. (mapovania lokálne overené 4. 10. 2026; filtre, unikátnosť a súbežnosť zatiaľ nie)
-- [ ] Doplniť databázové migrácie pred produkčným nasadením.
-- [ ] Pred verejným nasadením doplniť obmedzenie pokusov o prihlásenie a HTTPS.
-- [ ] Obnovenie hesla a podľa potreby refresh/revokácia tokenov.
+- [x] Doplniť databázové migrácie pred produkčným nasadením. (Flyway, src/main/resources/db/migration)
+- [ ] Pred verejným nasadením doplniť obmedzenie pokusov o prihlásenie a HTTPS. (limit pokusov hotový; HTTPS zostáva na nasadenie)
+- [x] Obnovenie hesla a podľa potreby refresh/revokácia tokenov. (backend hotový; e-mail potrebuje SMTP server, chýba frontend)
 
 ## Webová ukážka – 28. 9. 2026
 

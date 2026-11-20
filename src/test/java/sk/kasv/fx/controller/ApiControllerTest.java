@@ -34,6 +34,7 @@ class ApiControllerTest {
     @MockitoBean OrderService orders;
     @MockitoBean ReviewService reviews;
     @MockitoBean UserAdminService userAdmin;
+    @MockitoBean LoginAttemptService attempts;
     @MockitoBean CurrentUser current;
 
     @Test void categoriesArePublic() throws Exception {
@@ -104,6 +105,21 @@ class ApiControllerTest {
     @Test void deletingServiceReturnsNoContent() throws Exception {
         mvc.perform(delete("/api/services/3").with(jwt())).andExpect(status().isNoContent());
         verify(catalog).deleteService(3L);
+    }
+    @Test void tooManyLoginAttemptsReturn429() throws Exception {
+        doThrow(new sk.kasv.fx.exception.ApiException(429, "Too many attempts; try again in 15 minutes"))
+                .when(attempts).check(eq("login"), eq("a@example.invalid"), any());
+        mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"A@example.invalid\",\"password\":\"whatever-123\"}"))
+                .andExpect(status().isTooManyRequests());
+        verifyNoInteractions(auth);
+    }
+    @Test void refreshAndPasswordResetArePublic() throws Exception {
+        mvc.perform(post("/api/auth/password-reset/request").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"a@example.invalid\"}")).andExpect(status().isAccepted());
+        mvc.perform(post("/api/auth/logout").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"refreshToken\":\"abc\"}")).andExpect(status().isNoContent());
+        mvc.perform(post("/api/auth/logout-all")).andExpect(status().isUnauthorized());
     }
     @Test void invalidJwtIsRejected() throws Exception {
         mvc.perform(get("/api/orders/my").header("Authorization", "Bearer invalid-token"))
