@@ -72,5 +72,8 @@ public final class ApiDtos {
             boolean emailVerified, LocalDateTime createdAt) {}
     public record TwoFactorSetupResponse(String secret, String otpauthUri) {}
     public record TwoFactorCodeRequest(@NotBlank @Pattern(regexp = "\\d{6}") String code) {}
+    public record MessageRequest(@NotBlank @Size(max = 2000) String text) {}
+    /** senderRole: CUSTOMER or PROVIDER, i.e. which side of the order wrote it. */
+    public record MessageResponse(Long id, Long orderId, Long senderId, Role senderRole, String text, LocalDateTime createdAt) {}
     public record ErrorResponse(int status, String message, Map<String, String> fieldErrors) {}
 }

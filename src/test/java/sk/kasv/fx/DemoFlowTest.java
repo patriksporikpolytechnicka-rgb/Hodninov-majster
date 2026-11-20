@@ -37,6 +37,11 @@ class DemoFlowTest {
                 .contentType("application/json").content(request)).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.totalPrice").value(51.0)).andReturn().getResponse().getContentAsString());
         long orderId = order.get("id").asLong();
+        mvc.perform(post("/api/orders/" + orderId + "/messages").header("Authorization", "Bearer " + customerToken)
+                .contentType("application/json").content("{\"text\":\"Dobrý deň, zvoňte dvakrát.\"}")).andExpect(status().isCreated());
+        mvc.perform(get("/api/orders/" + orderId + "/messages").header("Authorization", "Bearer " + providerToken))
+                .andExpect(status().isOk()).andExpect(jsonPath("$[0].senderRole").value("CUSTOMER"))
+                .andExpect(jsonPath("$[0].text").value("Dobrý deň, zvoňte dvakrát."));
         for (String state : new String[]{"ACCEPTED", "IN_PROGRESS", "COMPLETED"}) {
             mvc.perform(patch("/api/orders/" + orderId + "/status").header("Authorization", "Bearer " + providerToken)
                     .contentType("application/json").content(json.writeValueAsString(Map.of("status", state))))

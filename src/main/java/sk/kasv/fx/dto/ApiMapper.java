@@ -26,6 +26,10 @@ public final class ApiMapper {
                 o.getUnitPrice(), o.getPriceUnit(), o.getQuantity(), o.getTotalPrice(),
                 o.getAddress(), o.getNote(), o.getCreatedAt());
     }
+    public static MessageResponse message(OrderMessage m) {
+        Role side = m.getSender().getId().equals(m.getOrder().getCustomer().getId()) ? Role.CUSTOMER : Role.PROVIDER;
+        return new MessageResponse(m.getId(), m.getOrder().getId(), m.getSender().getId(), side, m.getText(), m.getCreatedAt());
+    }
     public static ReviewResponse review(Review r) {
         return new ReviewResponse(r.getId(), r.getOrder().getId(), r.getProvider().getId(),
                 r.getOrder().getServiceName(), r.getRating(), r.getComment(), r.getCreatedAt());

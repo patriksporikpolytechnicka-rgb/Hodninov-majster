@@ -295,3 +295,10 @@ Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://lo
   a `reviewCount`. Hodnota sa prepočíta pri každom novom hodnotení (migrácia V7 ju doplní aj pre staré hodnotenia).
 - GET /api/services?sort=newest | price_asc | price_desc | rating – bez sort ostáva pôvodné poradie (najstaršie prvé).
   `rating` = najlepšie hodnotení majstri prví (pri zhode viac hodnotení). Neznáma hodnota → 400.
+
+## Chat k objednávke
+
+- POST /api/orders/{id}/messages `{"text":"..."}` → 201 MessageResponse; píše iba zákazník alebo majster danej objednávky (max. 2000 znakov).
+- GET /api/orders/{id}/messages?after=0 → zoznam od najstaršej, najviac 100 naraz. Frontend si pamätá id poslednej správy
+  a každých pár sekúnd sa pýta `?after=<id>` (polling, bez WebSocketu). Admin môže správy čítať, nie písať.
+- MessageResponse: `{"id":9,"orderId":5,"senderId":1,"senderRole":"CUSTOMER","text":"...","createdAt":"..."}`.

@@ -48,7 +48,7 @@ Základný backend a Angular demo boli zostavené a otestované 28. 9. 2026. Pos
 - [x] E-mailové upozornenia k objednávkam (backend).
 - [x] Overenie e-mailu pri registrácii (backend; chýba frontend stránka /overenie-emailu).
 
-- [ ] Chat zákazníka s poskytovateľom.
+- [x] Chat zákazníka s poskytovateľom. (backend; chýba frontend)
 - [ ] Hodnotenia po dokončenej zákazke. (backend hotový; chýba frontend)
 - [ ] Produkčné mesačné predplatné poskytovateľov (10 €), platobná brána a overené potvrdenia platieb. Bez provízií zo zákaziek.
 - [ ] Administrácia používateľov, kategórií a objednávok. (backend hotový: úprava/mazanie kategórií, zoznam, blokovanie a zmena roly používateľov, mazanie služieb; chýba frontend)
