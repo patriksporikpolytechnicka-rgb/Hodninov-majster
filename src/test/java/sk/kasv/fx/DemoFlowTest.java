@@ -76,6 +76,13 @@ class DemoFlowTest {
                 .andExpect(status().isConflict());
         mvc.perform(get("/api/providers/" + byRating.get("content").get(0).get("provider").get("id").asLong() + "/availability"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.daysOff[0]").value(when.toLocalDate().toString()));
+        byte[] png = {(byte) 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A, 1, 2, 3};
+        JsonNode withPhoto = body(mvc.perform(multipart("/api/providers/me/photo").file(new org.springframework.mock.web.MockMultipartFile("file", "me.png", "image/png", png))
+                .header("Authorization", "Bearer " + providerToken)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        String photoUrl = withPhoto.get("profileImage").asText();
+        mvc.perform(get(photoUrl.substring(0, photoUrl.indexOf('?')))).andExpect(status().isOk())
+                .andExpect(content().contentType("image/png")).andExpect(content().bytes(png))
+                .andExpect(header().string("Cache-Control", org.hamcrest.Matchers.containsString("max-age=86400")));
         JsonNode filtered = body(mvc.perform(get("/api/services").param("q", "Nastavenie").param("location", "Košice"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         assertThat(filtered.get("totalElements").asInt()).isEqualTo(1);

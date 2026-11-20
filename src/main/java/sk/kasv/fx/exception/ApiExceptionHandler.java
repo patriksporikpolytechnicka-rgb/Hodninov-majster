@@ -30,6 +30,14 @@ public class ApiExceptionHandler {
     ResponseEntity<ErrorResponse> conflict(DataIntegrityViolationException e) { return error(409, "Duplicate value or conflicting reference"); }
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     ResponseEntity<ErrorResponse> concurrent(ObjectOptimisticLockingFailureException e) { return error(409, "Record changed; reload and retry"); }
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    ResponseEntity<ErrorResponse> tooLarge(Exception e) { return error(413, "File is too large (max 2 MB)"); }
+    @ExceptionHandler({org.springframework.web.multipart.support.MissingServletRequestPartException.class,
+            org.springframework.web.bind.MissingServletRequestParameterException.class,
+            org.springframework.web.multipart.MultipartException.class})
+    ResponseEntity<ErrorResponse> badUpload(Exception e) { return error(400, "Missing or invalid file"); }
+    @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+    ResponseEntity<ErrorResponse> unsupportedType(Exception e) { return error(415, "Unsupported content type"); }
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ErrorResponse> denied(AccessDeniedException e) { return error(403, "Access denied"); }
     private ResponseEntity<ErrorResponse> error(int status, String message) {

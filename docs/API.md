@@ -313,3 +313,12 @@ Každý e-mail obsahuje odkaz FRONTEND_URL/objednavky/{id} (predvolene http://lo
 - Objednávka: v deň voľna → 409 „The handyman is not available on that day“; mimo pracovného času → 409
   „Outside the handyman's working hours“ (začiatok musí byť od start do end, end už nie). Majster bez pracovných hodín
   sa dá objednať kedykoľvek ako doteraz.
+
+## Profilová fotka majstra
+
+- POST /api/providers/me/photo – multipart/form-data, pole `file`; JPEG, PNG alebo WebP, max. 2 MB.
+  Typ sa overuje podľa obsahu súboru (nie podľa názvu). Vráti ProviderResponse s `profileImage` = `/api/providers/{id}/photo?v=...`.
+  Chyby: 413 príliš veľký, 415 iný typ, 400 chýba súbor.
+- GET /api/providers/{id}/photo (verejné) – obrázok, cache 1 deň (parameter v sa mení pri každom nahratí).
+- DELETE /api/providers/me/photo → 204, profileImage bude null.
+- PUT /api/providers/me už pole profileImage ignoruje (nastavuje ho iba nahratie fotky).

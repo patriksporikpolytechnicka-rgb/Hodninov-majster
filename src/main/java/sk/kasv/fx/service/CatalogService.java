@@ -68,7 +68,8 @@ public class CatalogService {
         ProviderProfile profile = providers.findByUserId(user.getId()).orElseGet(ProviderProfile::new);
         profile.setUser(user); profile.setName(request.name().strip());
         profile.setDescription(request.description().strip()); profile.setLocation(request.location().strip());
-        profile.setPhone(request.phone().strip()); profile.setProfileImage(request.profileImage());
+        // profileImage is no longer taken from the request; it is set by the photo upload (PhotoService).
+        profile.setPhone(request.phone().strip());
         profile.setAvailability(request.availability()); profile.startTrial(clock.instant());
         return ApiMapper.provider(providers.saveAndFlush(profile));
     }
